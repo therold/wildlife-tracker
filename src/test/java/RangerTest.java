@@ -14,4 +14,10 @@ public class RangerTest {
     assertTrue(testRanger instanceof Ranger);
   }
 
+  @Test
+  public void ranger_instantiatesWithoutId_0() {
+    Ranger testRanger = new Ranger("Bob", "Smith", 1, 5035550000L);
+    assertEquals(0, testRanger.getId());
+  }
+
 }
