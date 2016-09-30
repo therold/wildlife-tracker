@@ -1,3 +1,5 @@
+import org.sql2o.*;
+
 public class Ranger {
   private int id;
   private String userName;
@@ -69,6 +71,47 @@ public class Ranger {
   public void setPhone(long phone) {
     this.phone = phone;
   }
+
+  public void save() {
+    if (Ranger.userNameExists(this.userName, this.id)) {
+      throw new IllegalArgumentException("Error: Name already exists.");
+    } else {
+      try(Connection con = DB.sql2o.open()) {
+        String sql = "INSERT INTO rangers (username, firstname, lastname, badge, phone) VALUES (:username, :firstname, :lastname, :badge, :phone);";
+        this.id = (int) con.createQuery(sql, true)
+        .addParameter("username", this.userName)
+        .addParameter("firstname", this.firstName)
+        .addParameter("lastname", this.lastName)
+        .addParameter("badge", this.badge)
+        .addParameter("phone", this.phone)
+        .executeUpdate()
+        .getKey();
+      }
+    }
+  }
+
+    public static boolean userNameExists(String userName, int id) {
+      Integer count = 0;
+      try(Connection con = DB.sql2o.open()) {
+        String sql = "SELECT count(username) FROM rangers WHERE username = :username AND id != :id;";
+        count = con.createQuery(sql)
+          .throwOnMappingFailure(false)
+          .addParameter("username", userName)
+          .addParameter("id", id)
+          .executeScalar(Integer.class);
+      }
+      return count != 0;
+    }
+
+    public static Ranger find(int id) {
+      try(Connection con = DB.sql2o.open()) {
+        String sql = "SELECT * FROM rangers WHERE id = :id;";
+        return con.createQuery(sql)
+          .throwOnMappingFailure(false)
+          .addParameter("id", id)
+          .executeAndFetchFirst(Ranger.class);
+      }
+    }
 
 
   @Override
