@@ -73,26 +73,6 @@ public class EndangeredAnimalTest {
     assertEquals("Panda", savedAnimal.getName());
   }
 
-  @Test
-  public void update_preservesOriginalId_true() {
-    Animal testAnimal = new EndangeredAnimal("Rhino");
-    testAnimal.save();
-    testAnimal.update();
-    Animal savedAnimal = EndangeredAnimal.find(testAnimal.getId());
-    assertEquals(testAnimal.getId(), savedAnimal.getId());
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void update_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
-    Animal firstAnimal = new Animal("Rhino");
-    firstAnimal.save();
-    Animal secondAnimal = new Animal("Panda");
-    secondAnimal.save();
-    secondAnimal.setName("Rhino");
-    secondAnimal.update();
-  }
-
-
   // Database methods
   @Test
   public void save_setsTheId_int() {
@@ -115,6 +95,34 @@ public class EndangeredAnimalTest {
     firstAnimal.save();
     Animal secondAnimal = new EndangeredAnimal("Rhino");
     secondAnimal.save();
+  }
+
+  @Test
+  public void update_preservesOriginalId_true() {
+    Animal testAnimal = new EndangeredAnimal("Rhino");
+    testAnimal.save();
+    testAnimal.update();
+    Animal savedAnimal = EndangeredAnimal.find(testAnimal.getId());
+    assertEquals(testAnimal.getId(), savedAnimal.getId());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void update_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
+    Animal firstAnimal = new Animal("Rhino");
+    firstAnimal.save();
+    Animal secondAnimal = new Animal("Panda");
+    secondAnimal.save();
+    secondAnimal.setName("Rhino");
+    secondAnimal.update();
+  }
+
+  @Test
+  public void delete_removesObjectFromDB_null() {
+    Animal testAnimal = new EndangeredAnimal("Rhino");
+    testAnimal.save();
+    testAnimal.delete();
+    Animal savedAnimal = EndangeredAnimal.find(testAnimal.getId());
+    assertEquals(null, savedAnimal);
   }
 
 
