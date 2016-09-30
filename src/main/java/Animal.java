@@ -4,6 +4,7 @@ import org.sql2o.*;
 public class Animal implements DatabaseManagement {
   private int id;
   private String name;
+  private static final String DATABASE_TYPE = "animal";
 
   public Animal(String name) {
     this.name = name;
@@ -23,9 +24,10 @@ public class Animal implements DatabaseManagement {
 
   public void save() {
       try(Connection con = DB.sql2o.open()) {
-        String sql = "INSERT INTO animals (name) VALUES (:name);";
+        String sql = "INSERT INTO animals (name, type) VALUES (:name, :type);";
         this.id = (int) con.createQuery(sql, true)
           .addParameter("name", this.name)
+          .addParameter("type", DATABASE_TYPE)
           .executeUpdate()
           .getKey();
       }
@@ -52,29 +54,32 @@ public class Animal implements DatabaseManagement {
 
   public static Animal find(int id) {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM animals WHERE id = :id;";
+      String sql = "SELECT * FROM animals WHERE id = :id AND type = :type;";
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
         .addParameter("id", id)
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetchFirst(Animal.class);
     }
   }
 
   public static List<Animal> search(String search) {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM animals WHERE name ~* :search;";
+      String sql = "SELECT * FROM animals WHERE name ~* :search AND type = :type;";
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
         .addParameter("search", ".*" + search + ".*")
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetch(Animal.class);
     }
   }
 
   public static List<Animal> all() {
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM animals;";
+      String sql = "SELECT * FROM animals WHERE type = :type;";
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
+        .addParameter("type", DATABASE_TYPE)
         .executeAndFetch(Animal.class);
     }
   }

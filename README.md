@@ -12,7 +12,7 @@ _This application is designed to the Forest Service. This application will allow
 
 _Create the database and tables in PSQL:_
 * _CREATE DATABASE wildlife_tracker;_
-* _CREATE TABLE animals (id serial PRIMARY KEY, name varchar NOT NULL UNIQUE, health varchar, age int);_
+* _CREATE TABLE animals (id serial PRIMARY KEY, name varchar NOT NULL UNIQUE, health varchar, age int, type varchar NOT NULL);_
 * _CREATE TABLE rangers (id serial PRIMARY KEY, username varchar NOT NULL UNIQUE, firstname varchar NOT NULL, lastname varchar NOT NULL, badge int NOT NULL, phone varchar NOT NULL);_
 * _CREATE TABLE locations (id serial PRIMARY KEY, name varchar NOT NULL UNIQUE, x_coord numeric NOT NULL, y_coord numeric NOT NULL);_
 * _CREATE TABLE sightings (id serial PRIMARY KEY, animal_id int REFERENCES animals (id) ON DELETE CASCADE, location_id int REFERENCES locations (id) ON DELETE CASCADE, ranger_id int REFERENCES rangers (id) ON DELETE CASCADE);_
