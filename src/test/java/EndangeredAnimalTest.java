@@ -20,4 +20,11 @@ public class EndangeredAnimalTest {
     assertEquals(0, testAnimal.getId());
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void animal_cannotInstantiateEmptyName_IllegalArgumentException() {
+    Animal testAnimal = new EndangeredAnimal("");
+    testAnimal.setName("");
+  }
+
+
 }
