@@ -42,5 +42,17 @@ public class Location {
     this.yCoord = yCoord;
   }
 
+  @Override
+  public boolean equals(Object otherObject) {
+    if (!(otherObject instanceof Location)) {
+      return false;
+    } else {
+      Location otherLocation = (Location) otherObject;
+      return this.getId() == otherLocation.getId() &&
+        this.getName().equals(otherLocation.getName()) &&
+        this.getXCoord() == otherLocation.getXCoord() &&
+        this.getYCoord() == otherLocation.getYCoord();
+    }
+  }
 
 }
