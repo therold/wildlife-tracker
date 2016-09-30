@@ -1,6 +1,6 @@
 # Wildlife Tracker
 
-#### _An application to manage track wildlife, 9/16/2016_
+#### _An application to manage track wildlife, 9/29/2016_
 
 #### By _**Timothy Herold**_
 
