@@ -1,6 +1,7 @@
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
+import java.util.Arrays;
 
 public class AnimalTest {
 
@@ -93,6 +94,16 @@ public class AnimalTest {
     testAnimal.update();
     Animal savedAnimal = Animal.find(testAnimal.getId());
     assertEquals(testAnimal.getId(), savedAnimal.getId());
+  }
+
+  @Test
+  public void all_getsAllObjectsFromDatabase_true() {
+    Animal firstAnimal = new Animal("Rabbit");
+    firstAnimal.save();
+    Animal secondAnimal = new Animal("Goat");
+    secondAnimal.save();
+    Animal[] expected = { firstAnimal, secondAnimal };
+    assertTrue(Animal.all().containsAll(Arrays.asList(expected)));
   }
 
   //Other methods

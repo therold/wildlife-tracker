@@ -1,3 +1,4 @@
+import java.util.List;
 import org.sql2o.*;
 
 public class Animal implements DatabaseManagement {
@@ -56,6 +57,15 @@ public class Animal implements DatabaseManagement {
         .throwOnMappingFailure(false)
         .addParameter("id", id)
         .executeAndFetchFirst(Animal.class);
+    }
+  }
+
+  public static List<Animal> all() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM animals;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .executeAndFetch(Animal.class);
     }
   }
 
