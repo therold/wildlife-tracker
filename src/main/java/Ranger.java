@@ -3,6 +3,7 @@ public class Ranger {
   private String firstName;
   private String lastName;
   private int badge;
+  private long phone;
 
   public Ranger(String firstName, String lastName, int badge, long phone) {
     if(DatabaseManagement.nameValidation(firstName)) {
@@ -12,7 +13,7 @@ public class Ranger {
       this.lastName = lastName;
     }
     this.badge = badge;
-
+    this.phone = phone;
   }
 
   public int getId() {
@@ -45,6 +46,14 @@ public class Ranger {
 
   public void setBadge(int badge) {
     this.badge = badge;
+  }
+
+  public long getPhone() {
+    return this.phone;
+  }
+
+  public void setPhone(long phone) {
+    this.phone = phone;
   }
 
 }
