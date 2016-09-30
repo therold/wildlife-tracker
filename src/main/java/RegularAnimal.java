@@ -1,16 +1,15 @@
-import org.sql2o.*;
 import java.util.List;
+import org.sql2o.*;
 
-public class EndangeredAnimal extends Animal implements DatabaseManagement {
-  private static final String DATABASE_TYPE = "endangered_animal";
+public class RegularAnimal extends Animal implements DatabaseManagement {
+  private static final String DATABASE_TYPE = "animal";
 
-  public EndangeredAnimal(String name) {
+  public RegularAnimal(String name) {
     if(Animal.nameValidation(name)) {
       this.name = name;
     }
   }
 
-  @Override
   public void save() {
     if (Animal.nameExists(this.name, this.id)) {
       throw new IllegalArgumentException("Error: Name already exists.");
@@ -40,33 +39,44 @@ public class EndangeredAnimal extends Animal implements DatabaseManagement {
     }
   }
 
-  public static List<EndangeredAnimal> all() {
-    try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT * FROM animals WHERE type = :type;";
-      return con.createQuery(sql)
-        .throwOnMappingFailure(false)
-        .addParameter("type", DATABASE_TYPE)
-        .executeAndFetch(EndangeredAnimal.class);
-    }
-  }
-
-  public static EndangeredAnimal find(int id) {
+  public static RegularAnimal find(int id) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM animals WHERE id = :id AND type = :type;";
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
         .addParameter("id", id)
         .addParameter("type", DATABASE_TYPE)
-        .executeAndFetchFirst(EndangeredAnimal.class);
+        .executeAndFetchFirst(RegularAnimal.class);
+    }
+  }
+
+  public static List<RegularAnimal> all() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM animals WHERE type = :type;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("type", DATABASE_TYPE)
+        .executeAndFetch(RegularAnimal.class);
+    }
+  }
+
+  public static List<RegularAnimal> search(String search) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM animals WHERE name ~* :search AND type = :type;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("search", ".*" + search + ".*")
+        .addParameter("type", DATABASE_TYPE)
+        .executeAndFetch(RegularAnimal.class);
     }
   }
 
   @Override
   public boolean equals(Object otherObject) {
-    if (!(otherObject instanceof EndangeredAnimal)) {
+    if (!(otherObject instanceof RegularAnimal)) {
       return false;
     } else {
-      EndangeredAnimal otherAnimal = (EndangeredAnimal) otherObject;
+      RegularAnimal otherAnimal = (RegularAnimal) otherObject;
       return this.getName().equals(otherAnimal.getName()) &&
              this.getId() == otherAnimal.getId();
     }

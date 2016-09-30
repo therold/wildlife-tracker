@@ -1,6 +1,7 @@
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
+import java.util.Arrays;
 
 public class EndangeredAnimalTest {
 
@@ -108,9 +109,9 @@ public class EndangeredAnimalTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void update_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
-    Animal firstAnimal = new Animal("Rhino");
+    Animal firstAnimal = new EndangeredAnimal("Rhino");
     firstAnimal.save();
-    Animal secondAnimal = new Animal("Panda");
+    Animal secondAnimal = new EndangeredAnimal("Panda");
     secondAnimal.save();
     secondAnimal.setName("Rhino");
     secondAnimal.update();
@@ -125,12 +126,22 @@ public class EndangeredAnimalTest {
     assertEquals(null, savedAnimal);
   }
 
+  @Test
+  public void all_getsAllObjectsFromDatabase_true() {
+    EndangeredAnimal firstAnimal = new EndangeredAnimal("Rhino");
+    firstAnimal.save();
+    EndangeredAnimal secondAnimal = new EndangeredAnimal("Panda");
+    secondAnimal.save();
+    Animal[] expected = { firstAnimal, secondAnimal };
+    assertTrue(EndangeredAnimal.all().containsAll(Arrays.asList(expected)));
+  }
+
 
   //Other methods
   @Test
   public void equals_objectIsEqualIfAllPropertiesAreEqual_true() {
-    Animal firstAnimal = new Animal("Rabbit");
-    Animal secondAnimal = new Animal("Rabbit");
+    Animal firstAnimal = new EndangeredAnimal("Rabbit");
+    Animal secondAnimal = new EndangeredAnimal("Rabbit");
     assertTrue(firstAnimal.equals(secondAnimal));
   }
 
