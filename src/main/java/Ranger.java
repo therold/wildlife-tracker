@@ -1,7 +1,7 @@
 import java.util.List;
 import org.sql2o.*;
 
-public class Ranger {
+public class Ranger implements DatabaseManagement {
   private int id;
   private String userName;
   private String firstName;
