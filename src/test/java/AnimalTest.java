@@ -13,4 +13,11 @@ public class AnimalTest {
     assertTrue(animal instanceof Animal);
   }
 
+  // Name
+  @Test
+  public void animal_instantiatesWithName_Rabbit() {
+    Animal animal = new Animal("Rabbit");
+    assertEquals("Rabbit", animal.getName());
+  }
+
 }
