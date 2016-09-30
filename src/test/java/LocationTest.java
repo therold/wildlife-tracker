@@ -14,4 +14,10 @@ public class LocationTest {
     assertTrue(testLocation instanceof Location);
   }
 
+  @Test
+  public void ranger_instantiatesWithoutId_0() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    assertEquals(0, testLocation.getId());
+  }
+
 }
