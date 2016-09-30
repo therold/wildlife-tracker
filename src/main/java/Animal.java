@@ -2,8 +2,8 @@ import java.util.List;
 import org.sql2o.*;
 
 public class Animal implements DatabaseManagement {
-  private int id;
-  private String name;
+  protected int id;
+  protected String name;
   private static final String DATABASE_TYPE = "animal";
   private static final int MIN_NAME_LENGTH = 1;
 
@@ -64,14 +64,13 @@ public class Animal implements DatabaseManagement {
     }
   }
 
-  private boolean nameExists(String name, int id) {
+  public static boolean nameExists(String name, int id) {
     Integer count = 0;
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT count(name) FROM animals WHERE name = :name AND type = :type AND id != :id;";
+      String sql = "SELECT count(name) FROM animals WHERE name = :name AND id != :id;";
       count = con.createQuery(sql)
         .throwOnMappingFailure(false)
         .addParameter("name", name)
-        .addParameter("type", DATABASE_TYPE)
         .addParameter("id", id)
         .executeScalar(Integer.class);
     }

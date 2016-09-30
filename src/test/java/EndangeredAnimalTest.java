@@ -46,6 +46,15 @@ public class EndangeredAnimalTest {
     testAnimal.setName("");
   }
 
+  @Test
+  public void save_savesNameToDB_Rhino() {
+    Animal testAnimal = new EndangeredAnimal("Rhino");
+    testAnimal.save();
+    Animal savedAnimal = EndangeredAnimal.find(testAnimal.getId());
+    assertEquals("Rhino", savedAnimal.getName());
+  }
+
+
 
 
 
