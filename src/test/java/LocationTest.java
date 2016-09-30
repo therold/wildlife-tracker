@@ -53,6 +53,26 @@ public class LocationTest {
     assertEquals("Near bridge", savedLocation.getName());
   }
 
+  @Test
+  public void update_preservesOriginalName_Nearbridge() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    testLocation.update();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals("Near bridge", savedLocation.getName());
+  }
+
+  @Test
+  public void update_savesNewNameToDB_NewLocation() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    testLocation.setName("New Location");
+    testLocation.update();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals("New Location", savedLocation.getName());
+  }
+
+
   // xCoord
   @Test
   public void ranger_instantiatesWithXCoord_1_525() {
@@ -75,6 +95,25 @@ public class LocationTest {
     assertEquals(1.525, savedLocation.getXCoord(), 0);
   }
 
+  @Test
+  public void update_preservesOriginalXCoord_1_525() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    testLocation.update();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals(1.525, savedLocation.getXCoord(), 0);
+  }
+
+  @Test
+  public void update_savesNewXCoordToDB_3_885() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    testLocation.setXCoord(3.885);
+    testLocation.update();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals(3.885, savedLocation.getXCoord(), 0);
+  }
+
   // yCoord
   @Test
   public void ranger_instantiatesWithYCoord_2_311() {
@@ -95,6 +134,25 @@ public class LocationTest {
     testLocation.save();
     Location savedLocation = Location.find(testLocation.getId());
     assertEquals(-2.311, savedLocation.getYCoord(), 0);
+  }
+
+  @Test
+  public void update_preservesOriginalYCoord_2_311() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    testLocation.update();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals(-2.311, savedLocation.getYCoord(), 0);
+  }
+
+  @Test
+  public void update_savesNewXCoordToDB_4_243() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    testLocation.setYCoord(4.243);
+    testLocation.update();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals(4.243, savedLocation.getYCoord(), 0);
   }
 
   // Database methods
@@ -120,6 +178,26 @@ public class LocationTest {
     Location secondLocation = new Location("Near bridge", 1.525, -2.311);
     secondLocation.save();
   }
+
+  @Test
+  public void update_preservesOriginalId_true() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    testLocation.update();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals(testLocation.getId(), savedLocation.getId());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void update_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
+    Location firstLocation = new Location("Near bridge", 1.525, -2.311);
+    firstLocation.save();
+    Location secondLocation = new Location("New location", 1.525, -2.311);
+    secondLocation.save();
+    secondLocation.setName("Near bridge");
+    secondLocation.update();
+  }
+
 
   @Test
   public void delete_removesObjectFromDB_null() {

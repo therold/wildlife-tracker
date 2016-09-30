@@ -60,6 +60,23 @@ public class Location {
     }
   }
 
+  public void update() {
+    if (Location.nameExists(this.name, this.id)) {
+      throw new IllegalArgumentException("Error: Name already exists.");
+    } else {
+      try(Connection con = DB.sql2o.open()) {
+        String sql = "UPDATE locations SET name = :name, x_coord = :x_coord, y_coord = :y_coord WHERE id = :id;";
+        con.createQuery(sql)
+          .addParameter("id", this.id)
+          .addParameter("name", this.name)
+          .addParameter("x_coord", this.xCoord)
+          .addParameter("y_coord", this.yCoord)
+          .executeUpdate();
+      }
+    }
+  }
+
+
   public void delete() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "DELETE FROM locations WHERE id = :id;";
