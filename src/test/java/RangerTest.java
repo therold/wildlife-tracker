@@ -30,4 +30,26 @@ public class RangerTest {
     Ranger testRanger = new Ranger("Bob", "", 1, 5035550000L);
   }
 
+  // First Name
+  @Test
+  public void ranger_instantiatesWithName_Bob() {
+    Ranger testRanger = new Ranger("Bob", "Smith", 1, 5035550000L);
+    assertEquals("Bob", testRanger.getFirstName());
+  }
+
+  @Test
+  public void setFirstName_setsANewName_Tom() {
+    Ranger testRanger = new Ranger("Bob", "Smith", 1, 5035550000L);
+    testRanger.setFirstName("Tom");
+    assertEquals("Tom", testRanger.getFirstName());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void setName_cannotSetEmptyName_IllegalArgumentException() {
+    Ranger testRanger = new Ranger("Bob", "Smith", 1, 5035550000L);
+    testRanger.setFirstName("");
+  }
+
+
+
 }
