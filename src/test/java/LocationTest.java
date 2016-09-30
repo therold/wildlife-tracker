@@ -45,6 +45,13 @@ public class LocationTest {
     testLocation.setName("");
   }
 
+  @Test
+  public void save_savesNameToDB_Nearbridge() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals("Near bridge", savedLocation.getName());
+  }
 
   // xCoord
   @Test
@@ -60,6 +67,14 @@ public class LocationTest {
     assertEquals(3.885, testLocation.getXCoord(), 0);
   }
 
+  @Test
+  public void save_savesXCoordToDB_1_525() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals(1.525, savedLocation.getXCoord(), 0);
+  }
+
   // yCoord
   @Test
   public void ranger_instantiatesWithYCoord_2_311() {
@@ -72,6 +87,38 @@ public class LocationTest {
     Location testLocation = new Location("Near bridge", 1.525, -2.311);
     testLocation.setYCoord(4.243);
     assertEquals(4.243, testLocation.getYCoord(), 0);
+  }
+
+  @Test
+  public void save_savesYCoordToDB_2_311() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals(-2.311, savedLocation.getYCoord(), 0);
+  }
+
+  // Database methods
+  @Test
+  public void save_setsTheId_int() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    assertTrue(testLocation.getId() > 0);
+  }
+
+  @Test
+  public void save_insertsObjectIntoDB_true() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertTrue(testLocation.getName().equals(savedLocation.getName()));
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void save_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
+    Location firstLocation = new Location("Near bridge", 1.525, -2.311);
+    firstLocation.save();
+    Location secondLocation = new Location("Near bridge", 1.525, -2.311);
+    secondLocation.save();
   }
 
   //Other methods

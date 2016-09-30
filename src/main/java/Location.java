@@ -1,3 +1,5 @@
+import org.sql2o.*;
+
 public class Location {
   private int id;
   private String name;
@@ -40,6 +42,47 @@ public class Location {
 
   public void setYCoord(double yCoord) {
     this.yCoord = yCoord;
+  }
+
+  public void save() {
+    if (Location.nameExists(this.name, this.id)) {
+      throw new IllegalArgumentException("Error: Name already exists.");
+    } else {
+      try(Connection con = DB.sql2o.open()) {
+        String sql = "INSERT INTO locations (name, x_coord, y_coord) VALUES (:name, :x_coord, :y_coord);";
+        this.id = (int) con.createQuery(sql, true)
+        .addParameter("name", this.name)
+        .addParameter("x_coord", this.xCoord)
+        .addParameter("y_coord", this.yCoord)
+        .executeUpdate()
+        .getKey();
+      }
+    }
+  }
+
+  public static boolean nameExists(String name, int id) {
+    Integer count = 0;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT count(name) FROM locations WHERE name = :name AND id != :id;";
+      count = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("name", name)
+        .addParameter("id", id)
+        .executeScalar(Integer.class);
+    }
+    return count != 0;
+  }
+
+  public static Location find(int id) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM locations WHERE id = :id;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .addColumnMapping("x_coord", "xCoord")
+        .addColumnMapping("y_coord", "yCoord")
+        .executeAndFetchFirst(Location.class);
+    }
   }
 
   @Override
