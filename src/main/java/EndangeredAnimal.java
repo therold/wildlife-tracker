@@ -34,5 +34,15 @@ public class EndangeredAnimal extends Animal implements DatabaseManagement {
     }
   }
 
+  @Override
+  public boolean equals(Object otherObject) {
+    if (!(otherObject instanceof EndangeredAnimal)) {
+      return false;
+    } else {
+      EndangeredAnimal otherAnimal = (EndangeredAnimal) otherObject;
+      return this.getName().equals(otherAnimal.getName()) &&
+             this.getId() == otherAnimal.getId();
+    }
+  }
 
 }

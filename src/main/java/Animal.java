@@ -124,7 +124,8 @@ public class Animal implements DatabaseManagement {
       return false;
     } else {
       Animal otherAnimal = (Animal) otherObject;
-      return this.getName().equals(otherAnimal.getName());
+      return this.getName().equals(otherAnimal.getName()) &&
+             this.getId() == otherAnimal.getId();
     }
   }
 

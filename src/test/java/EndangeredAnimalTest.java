@@ -54,9 +54,37 @@ public class EndangeredAnimalTest {
     assertEquals("Rhino", savedAnimal.getName());
   }
 
+  // Database methods
+  @Test
+  public void save_setsTheId_int() {
+    Animal testAnimal = new Animal("Rabbit");
+    testAnimal.save();
+    assertTrue(testAnimal.getId() > 0);
+  }
 
+  @Test
+  public void save_insertsObjectIntoDB_true() {
+    Animal testAnimal = new Animal("Rabbit");
+    testAnimal.save();
+    Animal savedAnimal = Animal.find(testAnimal.getId());
+    assertTrue(testAnimal.equals(savedAnimal));
+  }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void save_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
+    Animal firstAnimal = new Animal("Rabbit");
+    firstAnimal.save();
+    Animal secondAnimal = new Animal("Rabbit");
+    secondAnimal.save();
+  }
 
+  //Other methods
+  @Test
+  public void equals_objectIsEqualIfAllPropertiesAreEqual_true() {
+    Animal firstAnimal = new Animal("Rabbit");
+    Animal secondAnimal = new Animal("Rabbit");
+    assertTrue(firstAnimal.equals(secondAnimal));
+  }
 
 
 }
