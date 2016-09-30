@@ -24,12 +24,11 @@ public class AnimalTest {
     assertEquals(0, testAnimal.getId());
   }
 
-
-    @Test(expected = IllegalArgumentException.class)
-    public void animal_cannotInstantiateEmptyName_IllegalArgumentException() {
-      Animal testAnimal = new Animal("");
-      testAnimal.setName("");
-    }
+  @Test(expected = IllegalArgumentException.class)
+  public void animal_cannotInstantiateEmptyName_IllegalArgumentException() {
+    Animal testAnimal = new Animal("");
+    testAnimal.setName("");
+  }
 
   // Name
   @Test

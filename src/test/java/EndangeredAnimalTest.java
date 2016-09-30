@@ -15,16 +15,24 @@ public class EndangeredAnimalTest {
   }
 
   @Test
-  public void animal_instantiatesWithoutId_0() {
+  public void endangeredAnimal_instantiatesWithoutId_0() {
     Animal testAnimal = new EndangeredAnimal("Rhino");
     assertEquals(0, testAnimal.getId());
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void animal_cannotInstantiateEmptyName_IllegalArgumentException() {
+  public void endangeredAnimal_cannotInstantiateEmptyName_IllegalArgumentException() {
     Animal testAnimal = new EndangeredAnimal("");
     testAnimal.setName("");
   }
+
+  // Name
+  @Test
+  public void endangeredAnimal_instantiatesWithName_Rhino() {
+    Animal testAnimal = new EndangeredAnimal("Rhino");
+    assertEquals("Rhino", testAnimal.getName());
+  }
+
 
 
 }
