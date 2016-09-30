@@ -27,4 +27,11 @@ public class AnimalTest {
     assertEquals("Goat", animal.getName());
   }
 
+  @Test
+  public void equals_objectIsEqualIfAllPropertiesAreEqual_true() {
+    Animal firstAnimal = new Animal("Rabbit");
+    Animal secondAnimal = new Animal("Rabbit");
+    assertTrue(firstAnimal.equals(secondAnimal));
+  }
+
 }

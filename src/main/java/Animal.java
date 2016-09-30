@@ -27,8 +27,12 @@ public class Animal implements DatabaseManagement {
 
   @Override
   public boolean equals(Object otherObject) {
-    //TODO
-    return false;
+    if (!(otherObject instanceof Animal)) {
+      return false;
+    } else {
+      Animal otherAnimal = (Animal) otherObject;
+      return this.getName().equals(otherAnimal.getName());
+    }
   }
 
 }
