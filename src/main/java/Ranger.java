@@ -56,4 +56,18 @@ public class Ranger {
     this.phone = phone;
   }
 
+  @Override
+  public boolean equals(Object otherObject) {
+    if (!(otherObject instanceof Ranger)) {
+      return false;
+    } else {
+      Ranger otherRanger = (Ranger) otherObject;
+      return this.getId() == otherRanger.getId() &&
+        this.getFirstName().equals(otherRanger.getFirstName()) &&
+        this.getLastName().equals(otherRanger.getLastName()) &&
+        this.getBadge() == otherRanger.getBadge() &&
+        this.getPhone() == otherRanger.getPhone();
+    }
+  }
+
 }

@@ -100,4 +100,13 @@ public class RangerTest {
     assertEquals(3601234567L, testRanger.getPhone());
   }
 
+  //Other methods
+  @Test
+  public void equals_objectIsEqualIfAllPropertiesAreEqual_true() {
+    Ranger firstRanger = new Ranger("Bob", "Smith", 1, 5035550000L);
+    Ranger secondRanger = new Ranger("Bob", "Smith", 1, 5035550000L);
+    assertTrue(firstRanger.equals(secondRanger));
+  }
+
+
 }
