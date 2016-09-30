@@ -14,4 +14,10 @@ public class EndangeredAnimalTest {
     assertTrue(testAnimal instanceof EndangeredAnimal);
   }
 
+  @Test
+  public void animal_instantiatesWithoutId_0() {
+    Animal testAnimal = new EndangeredAnimal("Rhino");
+    assertEquals(0, testAnimal.getId());
+  }
+
 }
