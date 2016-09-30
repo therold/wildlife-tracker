@@ -20,5 +20,14 @@ public class RangerTest {
     assertEquals(0, testRanger.getId());
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void ranger_cannotInstantiateEmptyFirstName_IllegalArgumentException() {
+    Ranger testRanger = new Ranger("", "Smith", 1, 5035550000L);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void ranger_cannotInstantiateEmptyLastName_IllegalArgumentException() {
+    Ranger testRanger = new Ranger("Bob", "", 1, 5035550000L);
+  }
 
 }
