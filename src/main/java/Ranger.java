@@ -1,11 +1,15 @@
 public class Ranger {
   private int id;
+  private String userName;
   private String firstName;
   private String lastName;
   private int badge;
   private long phone;
 
-  public Ranger(String firstName, String lastName, int badge, long phone) {
+  public Ranger(String userName, String firstName, String lastName, int badge, long phone) {
+    if(DatabaseManagement.nameValidation(userName)) {
+      this.userName = userName;
+    }
     if(DatabaseManagement.nameValidation(firstName)) {
       this.firstName = firstName;
     }
@@ -18,6 +22,16 @@ public class Ranger {
 
   public int getId() {
     return this.id;
+  }
+
+  public String getUserName() {
+    return this.userName;
+  }
+
+  public void setUserName(String userName) {
+    if(DatabaseManagement.nameValidation(userName)) {
+      this.userName = userName;
+    }
   }
 
   public String getFirstName() {
@@ -55,6 +69,7 @@ public class Ranger {
   public void setPhone(long phone) {
     this.phone = phone;
   }
+
 
   @Override
   public boolean equals(Object otherObject) {
