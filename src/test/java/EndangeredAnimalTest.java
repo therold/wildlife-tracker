@@ -2,6 +2,8 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Collections;
 
 public class EndangeredAnimalTest {
 
@@ -134,6 +136,29 @@ public class EndangeredAnimalTest {
     secondAnimal.save();
     Animal[] expected = { firstAnimal, secondAnimal };
     assertTrue(EndangeredAnimal.all().containsAll(Arrays.asList(expected)));
+  }
+
+  @Test
+  public void search_returnsNothingForUnknownValue_emptyList() {
+    EndangeredAnimal firstAnimal = new EndangeredAnimal("Panda");
+    firstAnimal.save();
+    EndangeredAnimal secondAnimal = new EndangeredAnimal("Rhino");
+    secondAnimal.save();
+    List<EndangeredAnimal> foundAnimals = EndangeredAnimal.search("fox");
+    assertEquals(Collections.<EndangeredAnimal>emptyList(), foundAnimals);
+  }
+
+  @Test
+  public void search_returnsAllMatchingObjects_true() {
+    EndangeredAnimal firstAnimal = new EndangeredAnimal("Asian Elephant");
+    firstAnimal.save();
+    EndangeredAnimal secondAnimal = new EndangeredAnimal("Indian Elephant");
+    secondAnimal.save();
+    EndangeredAnimal thirdEndangeredAnimal = new EndangeredAnimal("Panda");
+    thirdEndangeredAnimal.save();
+    List<EndangeredAnimal> foundAnimals = EndangeredAnimal.search("elep");
+    EndangeredAnimal[] expected = { firstAnimal, secondAnimal };
+    assertEquals(Arrays.asList(expected), foundAnimals);
   }
 
 

@@ -61,6 +61,18 @@ public class EndangeredAnimal extends Animal implements DatabaseManagement {
     }
   }
 
+  public static List<EndangeredAnimal> search(String search) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM animals WHERE name ~* :search AND type = :type;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("search", ".*" + search + ".*")
+        .addParameter("type", DATABASE_TYPE)
+        .executeAndFetch(EndangeredAnimal.class);
+    }
+  }
+
+
   @Override
   public boolean equals(Object otherObject) {
     if (!(otherObject instanceof EndangeredAnimal)) {
