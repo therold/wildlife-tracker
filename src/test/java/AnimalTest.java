@@ -2,6 +2,8 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
 
 public class AnimalTest {
 
@@ -104,6 +106,30 @@ public class AnimalTest {
     secondAnimal.save();
     Animal[] expected = { firstAnimal, secondAnimal };
     assertTrue(Animal.all().containsAll(Arrays.asList(expected)));
+  }
+
+  @Test
+  public void search_returnsNothingForUnknownValue_emptyList() {
+    Animal firstAnimal = new Animal("Rabbit");
+    firstAnimal.save();
+    Animal secondAnimal = new Animal("Goat");
+    secondAnimal.save();
+    List<Animal> foundAnimals = Animal.search("fox");
+    List<Animal> expected = new ArrayList<Animal>();
+    assertEquals(expected, foundAnimals);
+  }
+
+  @Test
+  public void search_returnsAllMatchingObjects_true() {
+    Animal firstAnimal = new Animal("Bobcat");
+    firstAnimal.save();
+    Animal secondAnimal = new Animal("House Cat");
+    secondAnimal.save();
+    Animal thirdAnimal = new Animal("Rabbit");
+    thirdAnimal.save();
+    List<Animal> foundAnimals = Animal.search("cat");
+    Animal[] expected = { firstAnimal, secondAnimal };
+    assertEquals(Arrays.asList(expected), foundAnimals);
   }
 
   //Other methods

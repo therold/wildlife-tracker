@@ -60,6 +60,16 @@ public class Animal implements DatabaseManagement {
     }
   }
 
+  public static List<Animal> search(String search) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM animals WHERE name ~* :search;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("search", ".*" + search + ".*")
+        .executeAndFetch(Animal.class);
+    }
+  }
+
   public static List<Animal> all() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM animals;";
