@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.Arrays;
+import java.util.Collections;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
@@ -315,13 +316,42 @@ public class RangerTest {
 
   @Test
   public void all_getsAllObjectsFromDatabase_true() {
-    Ranger firstRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    Ranger firstRanger = new Ranger("User", "Tom", "Smith", 1, 5035550000L);
     firstRanger.save();
-    Ranger secondRanger = new Ranger("NewUser", "Bob", "Smith", 1, 5035550000L);
+    Ranger secondRanger = new Ranger("NewUser", "Tommy", "Smith", 1, 5035550000L);
     secondRanger.save();
     Ranger[] expected = { firstRanger, secondRanger };
     assertTrue(Ranger.all().containsAll(Arrays.asList(expected)));
   }
+
+  @Test
+  public void search_returnsNothingForUnknownValue_emptyList() {
+    Ranger firstRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    firstRanger.save();
+    Ranger secondRanger = new Ranger("NewUser", "Bob", "Smith", 1, 5035550000L);
+    secondRanger.save();
+    List<Ranger> foundRangers = Ranger.search("tom");
+    assertEquals(Collections.<Ranger>emptyList(), foundRangers);
+  }
+
+  @Test
+  public void search_returnsAllMatchingObjects_true() {
+    Ranger firstRanger = new Ranger("User", "Tom", "Smith", 1, 5035550000L);
+    firstRanger.save();
+    Ranger secondRanger = new Ranger("NewUser", "Tommy", "Smith", 1, 5035550000L);
+    secondRanger.save();
+    Ranger thirdRanger = new Ranger("Tom", "John", "Smith", 1, 5035550000L);
+    thirdRanger.save();
+    Ranger fourthRanger = new Ranger("AnotherNewUser", "George", "Tompson", 1, 5035550000L);
+    fourthRanger.save();
+    Ranger fifthRanger = new Ranger("YetAnotherNewUser", "Mike", "Smith", 1, 5035550000L);
+    fifthRanger.save();
+    Ranger[] expected = { firstRanger, secondRanger, thirdRanger, fourthRanger };
+    List<Ranger> foundRangers = Ranger.search("tom");
+    assertEquals(Arrays.asList(expected), foundRangers);
+    assertFalse(foundRangers.contains(fifthRanger));
+  }
+
 
   //Other methods
   @Test

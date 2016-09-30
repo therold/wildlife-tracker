@@ -118,7 +118,6 @@ public class Ranger {
     }
   }
 
-
   public static boolean userNameExists(String userName, int id) {
     Integer count = 0;
     try(Connection con = DB.sql2o.open()) {
@@ -141,15 +140,25 @@ public class Ranger {
     }
   }
 
-    public static Ranger find(int id) {
-      try(Connection con = DB.sql2o.open()) {
-        String sql = "SELECT * FROM rangers WHERE id = :id;";
-        return con.createQuery(sql)
-          .throwOnMappingFailure(false)
-          .addParameter("id", id)
-          .executeAndFetchFirst(Ranger.class);
-      }
+  public static Ranger find(int id) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM rangers WHERE id = :id;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .executeAndFetchFirst(Ranger.class);
     }
+  }
+
+  public static List<Ranger> search(String search) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM rangers WHERE username ~* :search OR firstname ~* :search OR lastname ~* :search;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("search", ".*" + search + ".*")
+        .executeAndFetch(Ranger.class);
+    }
+  }
 
 
   @Override
