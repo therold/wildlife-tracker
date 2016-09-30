@@ -2,6 +2,7 @@ public class Ranger {
   private int id;
   private String firstName;
   private String lastName;
+  private int badge;
 
   public Ranger(String firstName, String lastName, int badge, long phone) {
     if(DatabaseManagement.nameValidation(firstName)) {
@@ -10,6 +11,7 @@ public class Ranger {
     if(DatabaseManagement.nameValidation(lastName)) {
       this.lastName = lastName;
     }
+    this.badge = badge;
 
   }
 
@@ -35,6 +37,14 @@ public class Ranger {
     if(DatabaseManagement.nameValidation(lastName)) {
       this.lastName = lastName;
     }
+  }
+
+  public int getBadge() {
+    return this.badge;
+  }
+
+  public void setBadge(int badge) {
+    this.badge = badge;
   }
 
 }
