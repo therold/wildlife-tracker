@@ -31,11 +31,22 @@ public class Animal implements DatabaseManagement {
     }
 
   public void update() {
-    //TODO
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE animals SET name = :name WHERE id = :id;";
+      con.createQuery(sql)
+        .addParameter("id", this.id)
+        .addParameter("name", this.name)
+        .executeUpdate();
+    }
   }
 
   public void delete() {
-    //TODO
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM animals WHERE id = :id;";
+      con.createQuery(sql)
+        .addParameter("id", this.id)
+        .executeUpdate();
+    }
   }
 
   public static Animal find(int id) {
