@@ -27,4 +27,14 @@ public class Ranger {
     }
   }
 
+  public String getLastName() {
+    return this.lastName;
+  }
+
+  public void setLastName(String lastName) {
+    if(DatabaseManagement.nameValidation(lastName)) {
+      this.lastName = lastName;
+    }
+  }
+
 }

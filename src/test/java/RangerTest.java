@@ -51,5 +51,25 @@ public class RangerTest {
   }
 
 
+  // Last Name
+  @Test
+  public void ranger_instantiatesWithName_Smith() {
+    Ranger testRanger = new Ranger("Bob", "Smith", 1, 5035550000L);
+    assertEquals("Smith", testRanger.getLastName());
+  }
+
+  @Test
+  public void setFirstName_setsANewName_Johnson() {
+    Ranger testRanger = new Ranger("Bob", "Smith", 1, 5035550000L);
+    testRanger.setLastName("Johnson");
+    assertEquals("Johnson", testRanger.getLastName());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void setLastName_cannotSetEmptyName_IllegalArgumentException() {
+    Ranger testRanger = new Ranger("Bob", "Smith", 1, 5035550000L);
+    testRanger.setLastName("");
+  }
+
 
 }
