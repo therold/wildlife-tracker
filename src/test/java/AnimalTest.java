@@ -20,4 +20,11 @@ public class AnimalTest {
     assertEquals("Rabbit", animal.getName());
   }
 
+  @Test
+  public void setName_setsANewName_Goat() {
+    Animal animal = new Animal("Rabbit");
+    animal.setName("Goat");
+    assertEquals("Goat", animal.getName());
+  }
+
 }
