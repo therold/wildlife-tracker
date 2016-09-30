@@ -90,18 +90,36 @@ public class Ranger {
     }
   }
 
-    public static boolean userNameExists(String userName, int id) {
-      Integer count = 0;
+  public void update() {
+    if (Ranger.userNameExists(this.userName, this.id)) {
+      throw new IllegalArgumentException("Error: Name already exists.");
+    } else {
       try(Connection con = DB.sql2o.open()) {
-        String sql = "SELECT count(username) FROM rangers WHERE username = :username AND id != :id;";
-        count = con.createQuery(sql)
-          .throwOnMappingFailure(false)
-          .addParameter("username", userName)
-          .addParameter("id", id)
-          .executeScalar(Integer.class);
+        String sql = "UPDATE rangers SET username = :username, firstname = :firstname, lastname = :lastname, badge = :badge, phone = :phone WHERE id = :id;";
+        con.createQuery(sql)
+          .addParameter("id", this.id)
+          .addParameter("username", this.userName)
+          .addParameter("firstname", this.firstName)
+          .addParameter("lastname", this.lastName)
+          .addParameter("badge", this.badge)
+          .addParameter("phone", this.phone)
+          .executeUpdate();
       }
-      return count != 0;
     }
+  }
+
+  public static boolean userNameExists(String userName, int id) {
+    Integer count = 0;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT count(username) FROM rangers WHERE username = :username AND id != :id;";
+      count = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("username", userName)
+        .addParameter("id", id)
+        .executeScalar(Integer.class);
+    }
+    return count != 0;
+  }
 
     public static Ranger find(int id) {
       try(Connection con = DB.sql2o.open()) {

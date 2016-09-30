@@ -53,6 +53,25 @@ public class RangerTest {
     assertEquals("User", savedRanger.getUserName());
   }
 
+  @Test
+  public void update_preservesOriginalUserName_User() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals("User", savedRanger.getUserName());
+  }
+
+  @Test
+  public void update_savesNewUserNameToDB_NewUser() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.setUserName("NewUser");
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals("NewUser", savedRanger.getUserName());
+  }
+
 
   // First Name
   @Test
@@ -85,6 +104,25 @@ public class RangerTest {
     testRanger.save();
     Ranger savedRanger = Ranger.find(testRanger.getId());
     assertEquals("Bob", savedRanger.getFirstName());
+  }
+
+  @Test
+  public void update_preservesOriginalFirstName_Bob() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals("Bob", savedRanger.getFirstName());
+  }
+
+  @Test
+  public void update_savesNewFirstNameToDB_Tom() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.setFirstName("Tom");
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals("Tom", savedRanger.getFirstName());
   }
 
   // Last Name
@@ -120,6 +158,25 @@ public class RangerTest {
     assertEquals("Smith", savedRanger.getLastName());
   }
 
+  @Test
+  public void update_preservesOriginalLastName_Smith() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals("Smith", savedRanger.getLastName());
+  }
+
+  @Test
+  public void update_savesNewLastNameToDB_Johnson() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.setLastName("Johnson");
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals("Johnson", savedRanger.getLastName());
+  }
+
   // Badge
   @Test
   public void ranger_instantiatesWithBadge_1() {
@@ -140,6 +197,25 @@ public class RangerTest {
     testRanger.save();
     Ranger savedRanger = Ranger.find(testRanger.getId());
     assertEquals(1, savedRanger.getBadge());
+  }
+
+  @Test
+  public void update_preservesOriginalBadge_1() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals(1, savedRanger.getBadge());
+  }
+
+  @Test
+  public void update_savesNewBadgeToDB_2() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.setBadge(2);
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals(2, savedRanger.getBadge());
   }
 
   // Phone
@@ -164,29 +240,68 @@ public class RangerTest {
     assertEquals(5035550000L, savedRanger.getPhone());
   }
 
+  @Test
+  public void update_preservesOriginalPhone_5035550000() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals(5035550000L, savedRanger.getPhone());
+  }
+
+  @Test
+  public void update_savesNewPhoneToDB_3601234567() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.setPhone(3601234567L);
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals(3601234567L, savedRanger.getPhone());
+  }
+
   // Database methods
   @Test
   public void save_setsTheId_int() {
-    EndangeredAnimal testAnimal = new EndangeredAnimal("Rhino", 1.5, "Good");
-    testAnimal.save();
-    assertTrue(testAnimal.getId() > 0);
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    assertTrue(testRanger.getId() > 0);
   }
 
   @Test
   public void save_insertsObjectIntoDB_true() {
-    EndangeredAnimal testAnimal = new EndangeredAnimal("Rhino", 1.5, "Good");
-    testAnimal.save();
-    EndangeredAnimal savedAnimal = EndangeredAnimal.find(testAnimal.getId());
-    assertTrue(testAnimal.equals(savedAnimal));
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertTrue(testRanger.equals(savedRanger));
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void save_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
-    EndangeredAnimal firstAnimal = new EndangeredAnimal("Rhino", 1.5, "Good");
-    firstAnimal.save();
-    EndangeredAnimal secondAnimal = new EndangeredAnimal("Rhino", 1.5, "Good");
-    secondAnimal.save();
+    Ranger firstRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    firstRanger.save();
+    Ranger secondRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    secondRanger.save();
   }
+
+  @Test
+  public void update_preservesOriginalId_true() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.update();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals(testRanger.getId(), savedRanger.getId());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void update_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
+    Ranger firstRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    firstRanger.save();
+    Ranger secondRanger = new Ranger("NewUser", "Bob", "Smith", 1, 5035550000L);
+    secondRanger.save();
+    secondRanger.setUserName("User");
+    secondRanger.update();
+  }
+
 
   //Other methods
   @Test
