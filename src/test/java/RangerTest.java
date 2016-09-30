@@ -1,3 +1,5 @@
+import java.util.List;
+import java.util.Arrays;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
@@ -302,6 +304,24 @@ public class RangerTest {
     secondRanger.update();
   }
 
+  @Test
+  public void delete_removesObjectFromDB_null() {
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    testRanger.delete();
+    Ranger savedRanger = Ranger.find(testRanger.getId());
+    assertEquals(null, savedRanger);
+  }
+
+  @Test
+  public void all_getsAllObjectsFromDatabase_true() {
+    Ranger firstRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    firstRanger.save();
+    Ranger secondRanger = new Ranger("NewUser", "Bob", "Smith", 1, 5035550000L);
+    secondRanger.save();
+    Ranger[] expected = { firstRanger, secondRanger };
+    assertTrue(Ranger.all().containsAll(Arrays.asList(expected)));
+  }
 
   //Other methods
   @Test

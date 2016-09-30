@@ -1,3 +1,4 @@
+import java.util.List;
 import org.sql2o.*;
 
 public class Ranger {
@@ -108,6 +109,16 @@ public class Ranger {
     }
   }
 
+  public void delete() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM rangers WHERE id = :id;";
+      con.createQuery(sql)
+        .addParameter("id", this.id)
+        .executeUpdate();
+    }
+  }
+
+
   public static boolean userNameExists(String userName, int id) {
     Integer count = 0;
     try(Connection con = DB.sql2o.open()) {
@@ -119,6 +130,15 @@ public class Ranger {
         .executeScalar(Integer.class);
     }
     return count != 0;
+  }
+
+  public static List<Ranger> all() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM rangers;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .executeAndFetch(Ranger.class);
+    }
   }
 
     public static Ranger find(int id) {
