@@ -5,7 +5,7 @@ public class EndangeredAnimal extends Animal implements DatabaseManagement {
   private static final String DATABASE_TYPE = "endangered_animal";
 
   public EndangeredAnimal(String name) {
-    if(Animal.nameValidation(name)) {
+    if(DatabaseManagement.nameValidation(name)) {
       this.name = name;
     }
   }

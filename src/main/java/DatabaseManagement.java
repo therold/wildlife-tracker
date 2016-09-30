@@ -3,4 +3,13 @@ public interface DatabaseManagement {
   public void update();
   public void delete();
   public boolean equals(Object otherObject);
+  public static final int MIN_NAME_LENGTH = 1;
+
+  public static boolean nameValidation(String name) {
+    if(name.length() < MIN_NAME_LENGTH) {
+      throw new IllegalArgumentException("Error: Name cannot be empty");
+    } else {
+      return true;
+    }
+  }
 }

@@ -27,7 +27,6 @@ public class RegularAnimalTest {
   @Test(expected = IllegalArgumentException.class)
   public void animal_cannotInstantiateEmptyName_IllegalArgumentException() {
     RegularAnimal testAnimal = new RegularAnimal("");
-    testAnimal.setName("");
   }
 
   // Name

@@ -26,7 +26,6 @@ public class EndangeredAnimalTest {
   @Test(expected = IllegalArgumentException.class)
   public void endangeredAnimal_cannotInstantiateEmptyName_IllegalArgumentException() {
     Animal testAnimal = new EndangeredAnimal("");
-    testAnimal.setName("");
   }
 
   // Name

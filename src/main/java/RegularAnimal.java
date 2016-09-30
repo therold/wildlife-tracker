@@ -5,7 +5,7 @@ public class RegularAnimal extends Animal implements DatabaseManagement {
   private static final String DATABASE_TYPE = "animal";
 
   public RegularAnimal(String name) {
-    if(Animal.nameValidation(name)) {
+    if(DatabaseManagement.nameValidation(name)) {
       this.name = name;
     }
   }

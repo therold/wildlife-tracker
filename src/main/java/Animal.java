@@ -15,16 +15,8 @@ public abstract class Animal implements DatabaseManagement {
   }
 
   public void setName(String name) {
-    if(Animal.nameValidation(name)) {
+    if(DatabaseManagement.nameValidation(name)) {
       this.name = name;
-    }
-  }
-
-  protected static boolean nameValidation(String name) {
-    if(name.length() < MIN_NAME_LENGTH) {
-      throw new IllegalArgumentException("Error: Name cannot be empty");
-    } else {
-      return true;
     }
   }
 

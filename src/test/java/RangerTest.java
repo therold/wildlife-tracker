@@ -20,4 +20,5 @@ public class RangerTest {
     assertEquals(0, testRanger.getId());
   }
 
+
 }
