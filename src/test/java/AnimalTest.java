@@ -4,6 +4,7 @@ import org.sql2o.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class AnimalTest {
 
@@ -23,6 +24,13 @@ public class AnimalTest {
     assertEquals(0, testAnimal.getId());
   }
 
+
+    @Test(expected = IllegalArgumentException.class)
+    public void animal_cannotInstantiateEmptyName_IllegalArgumentException() {
+      Animal testAnimal = new Animal("");
+      testAnimal.setName("");
+    }
+
   // Name
   @Test
   public void animal_instantiatesWithName_Rabbit() {
@@ -35,6 +43,12 @@ public class AnimalTest {
     Animal testAnimal = new Animal("Rabbit");
     testAnimal.setName("Goat");
     assertEquals("Goat", testAnimal.getName());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void setName_cannotSetEmptyName_IllegalArgumentException() {
+    Animal testAnimal = new Animal("Rabbit");
+    testAnimal.setName("");
   }
 
   @Test
@@ -80,6 +94,14 @@ public class AnimalTest {
     assertTrue(testAnimal.equals(savedAnimal));
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void save_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
+    Animal firstAnimal = new Animal("Rabbit");
+    firstAnimal.save();
+    Animal secondAnimal = new Animal("Rabbit");
+    secondAnimal.save();
+  }
+
   @Test
   public void delete_removesObjectFromDB_null() {
     Animal testAnimal = new Animal("Rabbit");
@@ -96,6 +118,16 @@ public class AnimalTest {
     testAnimal.update();
     Animal savedAnimal = Animal.find(testAnimal.getId());
     assertEquals(testAnimal.getId(), savedAnimal.getId());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void update_cannotSaveIfNameAlreadyExists_IllegalArgumentException() {
+    Animal firstAnimal = new Animal("Rabbit");
+    firstAnimal.save();
+    Animal secondAnimal = new Animal("Goat");
+    secondAnimal.save();
+    secondAnimal.setName("Rabbit");
+    secondAnimal.update();
   }
 
   @Test
@@ -115,8 +147,7 @@ public class AnimalTest {
     Animal secondAnimal = new Animal("Goat");
     secondAnimal.save();
     List<Animal> foundAnimals = Animal.search("fox");
-    List<Animal> expected = new ArrayList<Animal>();
-    assertEquals(expected, foundAnimals);
+    assertEquals(Collections.<Animal>emptyList(), foundAnimals);
   }
 
   @Test

@@ -5,9 +5,20 @@ public class Animal implements DatabaseManagement {
   private int id;
   private String name;
   private static final String DATABASE_TYPE = "animal";
+  private static final int MIN_NAME_LENGTH = 1;
 
   public Animal(String name) {
-    this.name = name;
+    if(nameValidation(name)) {
+      this.name = name;
+    }
+  }
+
+  private boolean nameValidation(String name) {
+    if(name.length() < MIN_NAME_LENGTH) {
+      throw new IllegalArgumentException("Error: Name cannot be empty");
+    } else {
+      return true;
+    }
   }
 
   public int getId() {
@@ -19,28 +30,52 @@ public class Animal implements DatabaseManagement {
   }
 
   public void setName(String name) {
-    this.name = name;
+    if(nameValidation(name)) {
+      this.name = name;
+    }
   }
 
   public void save() {
+    if (nameExists(this.name, this.id)) {
+      throw new IllegalArgumentException("Error: Name already exists.");
+    } else {
       try(Connection con = DB.sql2o.open()) {
         String sql = "INSERT INTO animals (name, type) VALUES (:name, :type);";
         this.id = (int) con.createQuery(sql, true)
-          .addParameter("name", this.name)
-          .addParameter("type", DATABASE_TYPE)
-          .executeUpdate()
-          .getKey();
+        .addParameter("name", this.name)
+        .addParameter("type", DATABASE_TYPE)
+        .executeUpdate()
+        .getKey();
       }
     }
+  }
 
   public void update() {
-    try(Connection con = DB.sql2o.open()) {
-      String sql = "UPDATE animals SET name = :name WHERE id = :id;";
-      con.createQuery(sql)
-        .addParameter("id", this.id)
-        .addParameter("name", this.name)
-        .executeUpdate();
+    if (nameExists(this.name, this.id)) {
+      throw new IllegalArgumentException("Error: Name already exists.");
+    } else {
+      try(Connection con = DB.sql2o.open()) {
+        String sql = "UPDATE animals SET name = :name WHERE id = :id;";
+        con.createQuery(sql)
+          .addParameter("id", this.id)
+          .addParameter("name", this.name)
+          .executeUpdate();
+      }
     }
+  }
+
+  private boolean nameExists(String name, int id) {
+    Integer count = 0;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT count(name) FROM animals WHERE name = :name AND type = :type AND id != :id;";
+      count = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("name", name)
+        .addParameter("type", DATABASE_TYPE)
+        .addParameter("id", id)
+        .executeScalar(Integer.class);
+    }
+    return count != 0;
   }
 
   public void delete() {
