@@ -60,6 +60,15 @@ public class Location {
     }
   }
 
+  public void delete() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "DELETE FROM locations WHERE id = :id;";
+      con.createQuery(sql)
+        .addParameter("id", this.id)
+        .executeUpdate();
+    }
+  }
+
   public static boolean nameExists(String name, int id) {
     Integer count = 0;
     try(Connection con = DB.sql2o.open()) {

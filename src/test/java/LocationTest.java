@@ -121,6 +121,16 @@ public class LocationTest {
     secondLocation.save();
   }
 
+  @Test
+  public void delete_removesObjectFromDB_null() {
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    testLocation.delete();
+    Location savedLocation = Location.find(testLocation.getId());
+    assertEquals(null, savedLocation);
+  }
+
+
   //Other methods
   @Test
   public void equals_objectIsEqualIfAllPropertiesAreEqual_true() {
