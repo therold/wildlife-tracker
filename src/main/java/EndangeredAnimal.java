@@ -2,11 +2,25 @@ import org.sql2o.*;
 import java.util.List;
 
 public class EndangeredAnimal extends Animal implements DatabaseManagement {
+  private double age;
   private static final String DATABASE_TYPE = "endangered_animal";
 
-  public EndangeredAnimal(String name) {
+  public EndangeredAnimal(String name, double age) {
     if(DatabaseManagement.nameValidation(name)) {
       this.name = name;
+    }
+    if(DatabaseManagement.ageValidation(age)) {
+      this.age = age;
+    }
+  }
+
+  public double getAge() {
+    return this.age;
+  }
+
+  public void setAge(double age) {
+    if(DatabaseManagement.ageValidation(age)) {
+      this.age = age;
     }
   }
 
@@ -16,9 +30,10 @@ public class EndangeredAnimal extends Animal implements DatabaseManagement {
       throw new IllegalArgumentException("Error: Name already exists.");
     } else {
       try(Connection con = DB.sql2o.open()) {
-        String sql = "INSERT INTO animals (name, type) VALUES (:name, :type);";
+        String sql = "INSERT INTO animals (name, type, age) VALUES (:name, :type, :age);";
         this.id = (int) con.createQuery(sql, true)
         .addParameter("name", this.name)
+        .addParameter("age", this.age)
         .addParameter("type", DATABASE_TYPE)
         .executeUpdate()
         .getKey();
@@ -31,10 +46,11 @@ public class EndangeredAnimal extends Animal implements DatabaseManagement {
       throw new IllegalArgumentException("Error: Name already exists.");
     } else {
       try(Connection con = DB.sql2o.open()) {
-        String sql = "UPDATE animals SET name = :name WHERE id = :id;";
+        String sql = "UPDATE animals SET name = :name, age = :age WHERE id = :id;";
         con.createQuery(sql)
           .addParameter("id", this.id)
           .addParameter("name", this.name)
+          .addParameter("age", this.age)
           .executeUpdate();
       }
     }
