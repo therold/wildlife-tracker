@@ -70,6 +70,18 @@ public class Sighting {
     }
   }
 
+  public void update() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "UPDATE sightings SET animal_id = :animal_id, location_id = :location_id, ranger_id = :ranger_id WHERE id = :id;";
+      con.createQuery(sql)
+        .addParameter("id", this.id)
+        .addParameter("animal_id", this.animalId)
+        .addParameter("location_id", this.locationId)
+        .addParameter("ranger_id", this.rangerId)
+        .executeUpdate();
+    }
+  }
+
   public static Sighting find(int id) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM sightings WHERE id = :id;";
@@ -89,10 +101,10 @@ public class Sighting {
       return false;
     } else {
       Sighting otherSighting = (Sighting) otherObject;
-      return this.getId() == otherSighting.getId(); // &&
-        // this.getAnimalId() == otherSighting.getAnimalId() &&
-        // this.getLocationId() == otherSighting.getLocationId() &&
-        // this.getRangerId() == otherSighting.getRangerId();
+      return this.getId() == otherSighting.getId() &&
+        this.getAnimalId() == otherSighting.getAnimalId() &&
+        this.getLocationId() == otherSighting.getLocationId() &&
+        this.getRangerId() == otherSighting.getRangerId();
     }
   }
 

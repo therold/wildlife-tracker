@@ -45,6 +45,21 @@ public class SightingTest {
     Sighting testSighting = new Sighting(-1, testLocation.getId(), testRanger.getId());
   }
 
+  @Test
+  public void setAnimalId_setsANewAnimalId_NewAnimalId() {
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    RegularAnimal newAnimal = new RegularAnimal("Cat");
+    newAnimal.save();
+    testSighting.setAnimalId(newAnimal.getId());
+    assertEquals(newAnimal.getId(), testSighting.getAnimalId());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void setAnimalId_cannotSetUnknown_IllegalArgumentException() {
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    testSighting.setAnimalId(-1);
+  }
+
   // locationId
   @Test
   public void sighting_instantiatesWithLocationId_LocationId() {
@@ -57,7 +72,22 @@ public class SightingTest {
     Sighting testSighting = new Sighting(testAnimal.getId(), -1, testRanger.getId());
   }
 
-  // locationId
+  @Test
+  public void setLocationId_setsANewLocationId_NewLocationId() {
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    Location newLocation = new Location("New Location", 1.525, -2.311);
+    newLocation.save();
+    testSighting.setLocationId(newLocation.getId());
+    assertEquals(newLocation.getId(), testSighting.getLocationId());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void setLocationId_cannotSetUnknown_IllegalArgumentException() {
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    testSighting.setLocationId(-1);
+  }
+
+  // rangerId
   @Test
   public void sighting_instantiatesWithRangerId_RangerId() {
     Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
@@ -67,6 +97,21 @@ public class SightingTest {
   @Test(expected = IllegalArgumentException.class)
   public void sighting_cannotInstantiateInvalidRangerId_IllegalArgumentException() {
     Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), -1);
+  }
+
+  @Test
+  public void setRangerId_setsANewRangerId_NewRangerId() {
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    Ranger newRanger = new Ranger("NewUser", "Tommy", "Smith", 1, 5035550000L);
+    newRanger.save();
+    testSighting.setRangerId(newRanger.getId());
+    assertEquals(newRanger.getId(), testSighting.getRangerId());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void setRangerId_cannotSetUnknown_IllegalArgumentException() {
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    testSighting.setRangerId(-1);
   }
 
   // Database methods
@@ -84,6 +129,16 @@ public class SightingTest {
     Sighting savedSighting = Sighting.find(testSighting.getId());
     assertTrue(testSighting.equals(savedSighting));
   }
+
+  @Test
+  public void update_preservesOriginalId_true() {
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    testSighting.save();
+    testSighting.update();
+    Sighting savedSighting = Sighting.find(testSighting.getId());
+    assertEquals(testSighting.getId(), savedSighting.getId());
+  }
+
 
   //Other methods
   @Test
