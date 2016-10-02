@@ -33,6 +33,18 @@ public abstract class Animal implements DatabaseManagement {
     return count != 0;
   }
 
+  public static boolean idExists(int id) {
+    Integer count = 0;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT count(id) FROM animals WHERE id = :id;";
+      count = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .executeScalar(Integer.class);
+    }
+    return count != 0;
+  }
+
   public void delete() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "DELETE FROM animals WHERE id = :id;";
