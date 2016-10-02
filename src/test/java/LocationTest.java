@@ -252,6 +252,4 @@ public class LocationTest {
     Location secondLocation = new Location("Near bridge", 1.525, -2.311);
     assertTrue(firstLocation.equals(secondLocation));
   }
-
-
 }
