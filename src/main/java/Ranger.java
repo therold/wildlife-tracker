@@ -118,6 +118,19 @@ public class Ranger implements DatabaseManagement {
     }
   }
 
+  public List<Sighting> getSightings() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM sightings WHERE ranger_id = :ranger_id;";
+      return con.createQuery(sql)
+        .addParameter("ranger_id", this.id)
+        .addColumnMapping("animal_id", "animalId")
+        .addColumnMapping("location_id", "locationId")
+        .addColumnMapping("ranger_id", "rangerId")
+        .executeAndFetch(Sighting.class);
+    }
+  }
+
+
   public static boolean userNameExists(String userName, int id) {
     Integer count = 0;
     try(Connection con = DB.sql2o.open()) {
