@@ -273,4 +273,19 @@ public class EndangeredAnimalTest {
     assertTrue(Animal.idExists(firstAnimal.getId()));
   }
 
+  @Test
+  public void getSightings_getsSightingAssociatedWithId_Sighting() {
+    EndangeredAnimal testAnimal = new EndangeredAnimal("Rabbit", 1.5, "Good");
+    testAnimal.save();
+    Location testLocation = new Location("Near bridge", 1.525, -2.311);
+    testLocation.save();
+    Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
+    testRanger.save();
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    testSighting.save();
+    List<Sighting> foundSighting = testAnimal.getSightings();
+    Sighting[] expected = { testSighting };
+    assertTrue(foundSighting.containsAll(Arrays.asList(expected)));
+  }
+
 }

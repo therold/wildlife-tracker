@@ -86,6 +86,18 @@ public class Location implements DatabaseManagement {
     }
   }
 
+  public List<Sighting> getSightings() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM sightings WHERE location_id = :location_id;";
+      return con.createQuery(sql)
+        .addParameter("location_id", this.id)
+        .addColumnMapping("animal_id", "animalId")
+        .addColumnMapping("location_id", "locationId")
+        .addColumnMapping("ranger_id", "rangerId")
+        .executeAndFetch(Sighting.class);
+    }
+  }
+
   public static boolean nameExists(String name, int id) {
     Integer count = 0;
     try(Connection con = DB.sql2o.open()) {
