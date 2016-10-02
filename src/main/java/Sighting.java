@@ -1,3 +1,4 @@
+import java.util.List;
 import org.sql2o.*;
 
 public class Sighting {
@@ -101,6 +102,17 @@ public class Sighting {
         .addColumnMapping("location_id", "locationId")
         .addColumnMapping("ranger_id", "rangerId")
         .executeAndFetchFirst(Sighting.class);
+    }
+  }
+
+  public static List<Sighting> all() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM sightings;";
+      return con.createQuery(sql)
+        .addColumnMapping("animal_id", "animalId")
+        .addColumnMapping("location_id", "locationId")
+        .addColumnMapping("ranger_id", "rangerId")
+        .executeAndFetch(Sighting.class);
     }
   }
 

@@ -1,3 +1,5 @@
+import java.util.Arrays;
+import java.util.List;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
@@ -138,6 +140,17 @@ public class SightingTest {
     Sighting savedSighting = Sighting.find(testSighting.getId());
     assertEquals(testSighting.getId(), savedSighting.getId());
   }
+
+  @Test
+  public void all_getsAllObjectsFromDatabase_true() {
+    Sighting firstSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    firstSighting.save();
+    Sighting secondSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    secondSighting.save();
+    Sighting[] expected = { firstSighting, secondSighting };
+    assertTrue(Sighting.all().containsAll(Arrays.asList(expected)));
+  }
+
 
   @Test
   public void delete_removesObjectFromDB_null() {
