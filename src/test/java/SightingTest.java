@@ -69,6 +69,31 @@ public class SightingTest {
     Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), -1);
   }
 
+  // Database methods
+  @Test
+  public void save_setsTheId_int() {
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    testSighting.save();
+    assertTrue(testSighting.getId() > 0);
+  }
+
+  @Test
+  public void save_insertsObjectIntoDB_true() {
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    testSighting.save();
+    Sighting savedSighting = Sighting.find(testSighting.getId());
+    assertTrue(testSighting.equals(savedSighting));
+  }
+
+  //Other methods
+  @Test
+  public void equals_objectIsEqualIfAllPropertiesAreEqual_true() {
+    Sighting firstSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    Sighting secondSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    assertTrue(firstSighting.equals(secondSighting));
+  }
+
+
 
 
 }
