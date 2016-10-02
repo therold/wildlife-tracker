@@ -102,7 +102,7 @@ public class Location implements DatabaseManagement {
   public static boolean idExists(int id) {
     Integer count = 0;
     try(Connection con = DB.sql2o.open()) {
-      String sql = "SELECT count(id) FROM locations WHERE id != :id;";
+      String sql = "SELECT count(id) FROM locations WHERE id = :id;";
       count = con.createQuery(sql)
         .throwOnMappingFailure(false)
         .addParameter("id", id)
