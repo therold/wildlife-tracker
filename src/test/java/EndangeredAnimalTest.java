@@ -261,4 +261,16 @@ public class EndangeredAnimalTest {
     assertTrue(firstAnimal.equals(secondAnimal));
   }
 
+  @Test
+  public void idExists_isFalseWhenIdDoesNotExists_false() {
+    assertFalse(Animal.idExists(1));
+  }
+
+  @Test
+  public void idExists_isTrueWhenIdDoesNotExists_true() {
+    EndangeredAnimal firstAnimal = new EndangeredAnimal("Rabbit", 1.5, "Good");
+    firstAnimal.save();
+    assertTrue(Animal.idExists(firstAnimal.getId()));
+  }
+
 }
