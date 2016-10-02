@@ -1,3 +1,5 @@
+import java.util.Arrays;
+import java.util.List;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
@@ -196,6 +198,17 @@ public class LocationTest {
     secondLocation.save();
     secondLocation.setName("Near bridge");
     secondLocation.update();
+  }
+
+  @Test
+  public void all_getsAllObjectsFromDatabase_true() {
+    Location firstLocation = new Location("Near bridge", 1.525, -2.311);
+    firstLocation.save();
+    Location secondLocation = new Location("New Location", 1.525, -2.311);
+    secondLocation.save();
+    Location[] expected = { firstLocation, secondLocation };
+    assertTrue(Location.all().containsAll(Arrays.asList(expected)));
+    // assertEquals(Location.all().size(), 2);
   }
 
 

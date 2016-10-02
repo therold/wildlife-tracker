@@ -1,6 +1,7 @@
+import java.util.List;
 import org.sql2o.*;
 
-public class Location {
+public class Location implements DatabaseManagement {
   private int id;
   private String name;
   private double xCoord;
@@ -76,7 +77,6 @@ public class Location {
     }
   }
 
-
   public void delete() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "DELETE FROM locations WHERE id = :id;";
@@ -99,6 +99,15 @@ public class Location {
     return count != 0;
   }
 
+  public static List<Location> all() {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM locations;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .executeAndFetch(Location.class);
+    }
+  }
+
   public static Location find(int id) {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM locations WHERE id = :id;";
@@ -118,9 +127,7 @@ public class Location {
     } else {
       Location otherLocation = (Location) otherObject;
       return this.getId() == otherLocation.getId() &&
-        this.getName().equals(otherLocation.getName()) &&
-        this.getXCoord() == otherLocation.getXCoord() &&
-        this.getYCoord() == otherLocation.getYCoord();
+        this.getName().equals(otherLocation.getName());
     }
   }
 
