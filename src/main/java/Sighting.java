@@ -2,6 +2,7 @@ public class Sighting {
   private int id;
   private int animalId;
   private int locationId;
+  private int rangerId;
 
   public Sighting (int animalId, int locationId, int rangerId) {
     if(!Animal.idExists(animalId)) {
@@ -12,6 +13,10 @@ public class Sighting {
       throw new IllegalArgumentException("Error: invalid locationId");
     }
     this.locationId = locationId;
+    if(!Ranger.idExists(rangerId)) {
+      throw new IllegalArgumentException("Error: invalid locationId");
+    }
+    this.rangerId = rangerId;
   }
 
   public int getId() {
@@ -38,6 +43,17 @@ public class Sighting {
       throw new IllegalArgumentException("Error: invalid locationId");
     }
     this.locationId = locationId;
+  }
+
+  public int getRangerId() {
+    return this.rangerId;
+  }
+
+  public void setRangerId(int rangerId) {
+    if(!Animal.idExists(rangerId)) {
+      throw new IllegalArgumentException("Error: invalid rangerId");
+    }
+    this.rangerId = rangerId;
   }
 
 }
