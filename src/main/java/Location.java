@@ -99,6 +99,18 @@ public class Location implements DatabaseManagement {
     return count != 0;
   }
 
+  public static boolean idExists(int id) {
+    Integer count = 0;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT count(id) FROM locations WHERE id != :id;";
+      count = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .executeScalar(Integer.class);
+    }
+    return count != 0;
+  }
+
   public static List<Location> all() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM locations;";
