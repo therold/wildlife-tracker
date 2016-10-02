@@ -1,5 +1,6 @@
 import java.util.Arrays;
 import java.util.List;
+import java.util.Collections;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.sql2o.*;
@@ -208,7 +209,6 @@ public class LocationTest {
     secondLocation.save();
     Location[] expected = { firstLocation, secondLocation };
     assertTrue(Location.all().containsAll(Arrays.asList(expected)));
-    // assertEquals(Location.all().size(), 2);
   }
 
 
@@ -221,6 +221,29 @@ public class LocationTest {
     assertEquals(null, savedLocation);
   }
 
+  @Test
+  public void search_returnsNothingForUnknownValue_emptyList() {
+    Location firstLocation = new Location("Near bridge", 1.525, -2.311);
+    firstLocation.save();
+    Location secondLocation = new Location("New Location", 1.525, -2.311);
+    secondLocation.save();
+    List<Location> foundLocations = Location.search("blank");
+    assertEquals(Collections.<Location>emptyList(), foundLocations);
+  }
+
+  @Test
+  public void search_returnsAllMatchingObjects_true() {
+    Location firstLocation = new Location("First Location", 1.525, -2.311);
+    firstLocation.save();
+    Location secondLocation = new Location("Second Location", 1.525, -2.311);
+    secondLocation.save();
+    Location thirdLocation = new Location("Another Place", 1.525, -2.311);
+    thirdLocation.save();
+    Location[] expected = { firstLocation, secondLocation };
+    List<Location> foundLocations = Location.search("loc");
+    assertEquals(Arrays.asList(expected), foundLocations);
+    assertFalse(foundLocations.contains(thirdLocation));
+  }
 
   //Other methods
   @Test

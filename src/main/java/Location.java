@@ -120,6 +120,16 @@ public class Location implements DatabaseManagement {
     }
   }
 
+  public static List<Location> search(String search) {
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT * FROM locations WHERE name ~* :search;";
+      return con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("search", ".*" + search + ".*")
+        .executeAndFetch(Location.class);
+    }
+  }
+
   @Override
   public boolean equals(Object otherObject) {
     if (!(otherObject instanceof Location)) {
