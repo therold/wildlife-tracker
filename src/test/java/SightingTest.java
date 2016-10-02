@@ -139,6 +139,15 @@ public class SightingTest {
     assertEquals(testSighting.getId(), savedSighting.getId());
   }
 
+  @Test
+  public void delete_removesObjectFromDB_null() {
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    testSighting.save();
+    testSighting.delete();
+    Sighting savedSighting = Sighting.find(testSighting.getId());
+    assertEquals(null, savedSighting);
+  }
+
 
   //Other methods
   @Test
