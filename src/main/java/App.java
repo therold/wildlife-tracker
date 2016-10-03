@@ -280,7 +280,12 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/rangers/search", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      if(request.queryParams("s") != null) {
+        String search = request.queryParams("s");
+        model.put("rangers", Ranger.search(search));
+        model.put("search", search);
+      }
+      model.put("template", "templates/rangers/search.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -388,11 +393,6 @@ public class App {
         model.put("sighting", sighting);
       }
       model.put("template", "templates/sightings/delete.vtl");
-      return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
-    get("/sightings/search", (request, response) -> {
-      model.put("template", "templates/index.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
