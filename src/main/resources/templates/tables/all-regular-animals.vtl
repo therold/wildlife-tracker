@@ -7,7 +7,7 @@
       <th>Delete</th>
     </thead>
     <tbody>
-      #foreach ($animal in $endangeredanimals)
+      #foreach ($animal in $regularanimals)
         <tr>
           <td>$animal.getName()</td>
           <td><a href="/animals/$animal.getId()">View</a></td>

@@ -23,6 +23,13 @@ public class App {
 
     // Home
     get("/", (request, response) -> {
+      model.put("rangers", Ranger.all());
+      model.put("locations", Location.all());
+      List<Animal> allAnimals = new ArrayList<Animal>();
+      allAnimals.addAll(EndangeredAnimal.all());
+      allAnimals.addAll(RegularAnimal.all());
+      model.put("animals", allAnimals);
+      model.put("sightings", Sighting.all());
       model.put("template", "templates/index.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
@@ -447,13 +454,7 @@ public class App {
       response.redirect("/sightings");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
-
-    // Admin
-    get("/admin", (request, response) -> {
-      model.put("template", "templates/index.vtl");
-      return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
+    
   }
 
   private static Animal tryFindAnimal(String id) {
