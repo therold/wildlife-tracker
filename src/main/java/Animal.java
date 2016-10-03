@@ -25,6 +25,7 @@ public abstract class Animal implements DatabaseManagement {
       String sql = "SELECT * FROM sightings WHERE animal_id = :animal_id;";
       return con.createQuery(sql)
         .addParameter("animal_id", this.id)
+        .addColumnMapping("time_of_sighting", "timeOfSighting")
         .addColumnMapping("animal_id", "animalId")
         .addColumnMapping("location_id", "locationId")
         .addColumnMapping("ranger_id", "rangerId")

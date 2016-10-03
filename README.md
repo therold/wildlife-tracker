@@ -15,7 +15,7 @@ _Create the database and tables in PSQL:_
 * _CREATE TABLE animals (id serial PRIMARY KEY, name varchar NOT NULL UNIQUE, health varchar, age numeric, type varchar NOT NULL);_
 * _CREATE TABLE rangers (id serial PRIMARY KEY, username varchar NOT NULL UNIQUE, firstname varchar NOT NULL, lastname varchar NOT NULL, badge int NOT NULL, phone bigint NOT NULL);_
 * _CREATE TABLE locations (id serial PRIMARY KEY, name varchar NOT NULL UNIQUE, x_coord numeric NOT NULL, y_coord numeric NOT NULL);_
-* _CREATE TABLE sightings (id serial PRIMARY KEY, animal_id int REFERENCES animals (id) ON DELETE CASCADE, location_id int REFERENCES locations (id) ON DELETE CASCADE, ranger_id int REFERENCES rangers (id) ON DELETE CASCADE);_
+* _CREATE TABLE sightings (id serial PRIMARY KEY, time_of_sighting timestamp NOT NULL, animal_id int REFERENCES animals (id) ON DELETE CASCADE, location_id int REFERENCES locations (id) ON DELETE CASCADE, ranger_id int REFERENCES rangers (id) ON DELETE CASCADE);_
 
 _Download Java and build source code from [GitHub](https://github.com/therold/wildlife-tracker) in the terminal._
 * _git clone https://github.com/therold/wildlife-tracker.git_

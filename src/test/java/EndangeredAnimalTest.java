@@ -4,6 +4,7 @@ import org.sql2o.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Collections;
+import java.sql.Timestamp;
 
 public class EndangeredAnimalTest {
 
@@ -281,7 +282,7 @@ public class EndangeredAnimalTest {
     testLocation.save();
     Ranger testRanger = new Ranger("User", "Bob", "Smith", 1, 5035550000L);
     testRanger.save();
-    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId());
+    Sighting testSighting = new Sighting(testAnimal.getId(), testLocation.getId(), testRanger.getId(), new Timestamp(1L));
     testSighting.save();
     List<Sighting> foundSighting = testAnimal.getSightings();
     Sighting[] expected = { testSighting };

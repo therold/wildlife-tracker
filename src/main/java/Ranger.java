@@ -123,6 +123,7 @@ public class Ranger implements DatabaseManagement {
       String sql = "SELECT * FROM sightings WHERE ranger_id = :ranger_id;";
       return con.createQuery(sql)
         .addParameter("ranger_id", this.id)
+        .addColumnMapping("time_of_sighting", "timeOfSighting")
         .addColumnMapping("animal_id", "animalId")
         .addColumnMapping("location_id", "locationId")
         .addColumnMapping("ranger_id", "rangerId")
