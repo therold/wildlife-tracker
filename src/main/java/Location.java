@@ -129,6 +129,8 @@ public class Location implements DatabaseManagement {
       String sql = "SELECT * FROM locations;";
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
+        .addColumnMapping("x_coord", "xCoord")
+        .addColumnMapping("y_coord", "yCoord")
         .executeAndFetch(Location.class);
     }
   }
@@ -151,6 +153,8 @@ public class Location implements DatabaseManagement {
       return con.createQuery(sql)
         .throwOnMappingFailure(false)
         .addParameter("search", ".*" + search + ".*")
+        .addColumnMapping("x_coord", "xCoord")
+        .addColumnMapping("y_coord", "yCoord")
         .executeAndFetch(Location.class);
     }
   }

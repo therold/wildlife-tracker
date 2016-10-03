@@ -121,12 +121,13 @@ public class App {
 
     // Location
     get("/locations", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      model.put("locations", Location.all());
+      model.put("template", "templates/locations/index.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/locations/new", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      model.put("template", "templates/locations/new.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -151,7 +152,12 @@ public class App {
     }, new VelocityTemplateEngine());
 
     post("/locations", (request, response) -> {
-      response.redirect("/");
+      String name = request.queryParams("name");
+      double xCoord = Double.parseDouble(request.queryParams("xcoord"));
+      double yCoord = Double.parseDouble(request.queryParams("ycoord"));
+      Location location = new Location(name, xCoord, yCoord);
+      location.save();
+      response.redirect("/locations");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
