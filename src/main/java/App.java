@@ -47,7 +47,13 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/animals/delete/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Animal animal = tryFindAnimal(request.params(":id"));
+      if(animal == null) {
+        response.redirect("/");
+      } else {
+        model.put("animal", animal);
+      }
+      model.put("template", "templates/animals/delete.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -57,7 +63,13 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/animals/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Animal animal = tryFindAnimal(request.params(":id"));
+      if(animal == null) {
+        response.redirect("/");
+      } else {
+        model.put("animal", animal);
+      }
+      model.put("template", "templates/animals/view.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -73,17 +85,37 @@ public class App {
         RegularAnimal animal = new RegularAnimal(name);
         animal.save();
       }
-      response.redirect("/");
+      response.redirect("/animals");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     post("/animals/edit", (request, response) -> {
-      response.redirect("/");
+      int id = tryParseInt(request.queryParams("id"));
+      String type = request.queryParams("type");
+      String name = request.queryParams("name");
+      if(type.equals(EndangeredAnimal.DATABASE_TYPE)) {
+        String health = request.queryParams("health");
+        double age = Double.parseDouble(request.queryParams("age"));
+        EndangeredAnimal animal = EndangeredAnimal.find(id);
+        animal.setName(name);
+        animal.setHealth(health);
+        animal.setAge(age);
+        animal.update();
+      } else {
+        RegularAnimal animal = RegularAnimal.find(id);
+        animal.setName(name);
+        animal.update();
+      }
+      response.redirect("/animals");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     post("/animals/delete", (request, response) -> {
-      response.redirect("/");
+      Animal animal = tryFindAnimal(request.queryParams("animalId"));
+      if(animal != null) {
+        animal.delete();
+      }
+      response.redirect("/animals");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 

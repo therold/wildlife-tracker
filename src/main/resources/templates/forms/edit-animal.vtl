@@ -1,5 +1,6 @@
 <form action="/animals/edit" method="post">
-  <input id="type" name="type" type="hidden" value="endangered_animal">
+  <input id="type" name="type" type="hidden" value="$animal.getType()">
+  <input id="id" name="id" type="hidden" value="$animal.getId()">
   <div class="form-group">
     <label for="name">Animal name</label>
     <input id="name" name="name" class="form-control" type="text" required value="$animal.getName()">
