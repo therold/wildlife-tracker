@@ -24,7 +24,9 @@ public class App {
 
     // Animal
     get("/animals", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      model.put("regularanimals", RegularAnimal.all());
+      model.put("endangeredanimals", EndangeredAnimal.all());
+      model.put("template", "templates/animals/index.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
