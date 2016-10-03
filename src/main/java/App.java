@@ -224,12 +224,13 @@ public class App {
 
     // Ranger
     get("/rangers", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      model.put("rangers", Ranger.all());
+      model.put("template", "templates/rangers/index.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/rangers/new", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      model.put("template", "templates/rangers/new.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -254,7 +255,18 @@ public class App {
     }, new VelocityTemplateEngine());
 
     post("/rangers", (request, response) -> {
-      response.redirect("/");
+      String username = request.queryParams("username");
+      String firstname = request.queryParams("firstname");
+      String lastname = request.queryParams("lastname");
+      int badge = Integer.parseInt(request.queryParams("badge"));
+      long phone = Long.parseLong(request.queryParams("phone"));
+      try {
+        Ranger ranger = new Ranger(username, firstname, lastname, badge, phone);
+        ranger.save();
+      } catch (IllegalArgumentException e) {
+        response.redirect("/rangers");
+      }
+      response.redirect("/rangers");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
