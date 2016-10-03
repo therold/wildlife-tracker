@@ -178,7 +178,12 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/locations/search", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      if(request.queryParams("s") != null) {
+        String search = request.queryParams("s");
+        model.put("locations", Location.search(search));
+        model.put("search", search);
+      }
+      model.put("template", "templates/locations/search.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -454,7 +459,7 @@ public class App {
       response.redirect("/sightings");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
-    
+
   }
 
   private static Animal tryFindAnimal(String id) {
