@@ -79,8 +79,12 @@ public class App {
       if(type.equals(EndangeredAnimal.DATABASE_TYPE)) {
         String health = request.queryParams("health");
         double age = Double.parseDouble(request.queryParams("age"));
-        EndangeredAnimal animal = new EndangeredAnimal(name, age, health);
-        animal.save();
+        try {
+          EndangeredAnimal animal = new EndangeredAnimal(name, age, health);
+          animal.save();
+        } catch (IllegalArgumentException e) {
+          response.redirect("/animals");
+        }
       } else {
         RegularAnimal animal = new RegularAnimal(name);
         animal.save();
@@ -96,15 +100,23 @@ public class App {
       if(type.equals(EndangeredAnimal.DATABASE_TYPE)) {
         String health = request.queryParams("health");
         double age = Double.parseDouble(request.queryParams("age"));
-        EndangeredAnimal animal = EndangeredAnimal.find(id);
-        animal.setName(name);
-        animal.setHealth(health);
-        animal.setAge(age);
-        animal.update();
+        try {
+          EndangeredAnimal animal = EndangeredAnimal.find(id);
+          animal.setName(name);
+          animal.setHealth(health);
+          animal.setAge(age);
+          animal.update();
+        } catch (IllegalArgumentException e) {
+          response.redirect("/animals");
+        }
       } else {
-        RegularAnimal animal = RegularAnimal.find(id);
-        animal.setName(name);
-        animal.update();
+        try {
+          RegularAnimal animal = RegularAnimal.find(id);
+          animal.setName(name);
+          animal.update();
+        } catch (IllegalArgumentException e) {
+          response.redirect("/animals");
+        }
       }
       response.redirect("/animals");
       return new ModelAndView(model, layout);
@@ -132,12 +144,24 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/locations/edit/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Location location = tryFindLocation(request.params(":id"));
+      if(location == null) {
+        response.redirect("/");
+      } else {
+        model.put("location", location);
+      }
+      model.put("template", "templates/locations/edit.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/locations/delete/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Location location = tryFindLocation(request.params(":id"));
+      if(location == null) {
+        response.redirect("/");
+      } else {
+        model.put("location", location);
+      }
+      model.put("template", "templates/locations/delete.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -155,19 +179,40 @@ public class App {
       String name = request.queryParams("name");
       double xCoord = Double.parseDouble(request.queryParams("xcoord"));
       double yCoord = Double.parseDouble(request.queryParams("ycoord"));
-      Location location = new Location(name, xCoord, yCoord);
-      location.save();
+      try {
+        Location location = new Location(name, xCoord, yCoord);
+        location.save();
+      } catch (IllegalArgumentException e) {
+        response.redirect("/locations");
+      }
       response.redirect("/locations");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     post("/locations/edit", (request, response) -> {
-      response.redirect("/");
+      int id = tryParseInt(request.queryParams("id"));
+      String name = request.queryParams("name");
+      double xCoord = Double.parseDouble(request.queryParams("xcoord"));
+      double yCoord = Double.parseDouble(request.queryParams("xcoord"));
+      try {
+        Location location = Location.find(id);
+        location.setName(name);
+        location.setXCoord(xCoord);
+        location.setYCoord(yCoord);
+        location.update();
+      } catch (IllegalArgumentException e) {
+        response.redirect("/locations");
+      }
+      response.redirect("/locations");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     post("/locations/delete", (request, response) -> {
-      response.redirect("/");
+      Location location = tryFindLocation(request.queryParams("locationId"));
+      if(location != null) {
+        location.delete();
+      }
+      response.redirect("/locations");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -281,6 +326,15 @@ public class App {
       } else {
         return null;
       }
+    } else {
+      return null;
+    }
+  }
+
+  private static Location tryFindLocation(String id) {
+    Integer locationId = tryParseInt(id);
+    if(locationId != null && Location.find(locationId) != null) {
+      return Location.find(locationId);
     } else {
       return null;
     }
