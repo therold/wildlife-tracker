@@ -171,7 +171,13 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/locations/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Location location = tryFindLocation(request.params(":id"));
+      if(location == null) {
+        response.redirect("/");
+      } else {
+        model.put("location", location);
+      }
+      model.put("template", "templates/locations/view.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
