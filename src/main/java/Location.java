@@ -124,6 +124,18 @@ public class Location implements DatabaseManagement {
     return count != 0;
   }
 
+  public static String getLocationName(int id) {
+    String name;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT name FROM locations WHERE id = :id;";
+      name = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .executeScalar(String.class);
+    }
+    return name;
+  }
+
   public static List<Location> all() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM locations;";

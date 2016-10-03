@@ -1,3 +1,8 @@
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import spark.ModelAndView;
@@ -321,12 +326,22 @@ public class App {
 
     // Sighting
     get("/sightings", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      model.put("Ranger", Ranger.class);
+      model.put("Location", Location.class);
+      model.put("Animal", Animal.class);
+      model.put("sightings", Sighting.all());
+      model.put("template", "templates/sightings/index.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/sightings/new", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      model.put("rangers", Ranger.all());
+      model.put("locations", Location.all());
+      List<Animal> allAnimals = new ArrayList<Animal>();
+      allAnimals.addAll(EndangeredAnimal.all());
+      allAnimals.addAll(RegularAnimal.all());
+      model.put("animals", allAnimals);
+      model.put("template", "templates/sightings/new.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -351,7 +366,21 @@ public class App {
     }, new VelocityTemplateEngine());
 
     post("/sightings", (request, response) -> {
-      response.redirect("/");
+      int rangerId = Integer.parseInt(request.queryParams("rangerId"));
+      int locationId = Integer.parseInt(request.queryParams("locationId"));
+      int animalId = Integer.parseInt(request.queryParams("animalId"));
+      String timeOfSighting = request.queryParams("timeOfSighting");
+      Calendar cal = Calendar.getInstance();
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+      System.out.println(timeOfSighting);
+      cal.setTime(dateFormat.parse(timeOfSighting));
+      try {
+        Sighting sighting = new Sighting(animalId, locationId, rangerId, new Timestamp(cal.getTimeInMillis()));
+        sighting.save();
+      } catch (IllegalArgumentException e) {
+        response.redirect("/sightings");
+      }
+      response.redirect("/sightings");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 

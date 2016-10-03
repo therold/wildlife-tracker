@@ -157,6 +157,18 @@ public class Ranger implements DatabaseManagement {
     return count != 0;
   }
 
+  public static String getRangerUserName(int id) {
+    String name;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT username FROM rangers WHERE id = :id;";
+      name = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .executeScalar(String.class);
+    }
+    return name;
+  }
+
   public static List<Ranger> all() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "SELECT * FROM rangers;";

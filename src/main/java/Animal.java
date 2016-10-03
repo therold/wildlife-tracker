@@ -75,6 +75,18 @@ public abstract class Animal implements DatabaseManagement {
     return type;
   }
 
+  public static String getAnimalName(int id) {
+    String name;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT name FROM animals WHERE id = :id;";
+      name = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .executeScalar(String.class);
+    }
+    return name;
+  }
+
   public void delete() {
     try(Connection con = DB.sql2o.open()) {
       String sql = "DELETE FROM animals WHERE id = :id;";
