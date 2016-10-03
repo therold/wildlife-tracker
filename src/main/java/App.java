@@ -235,12 +235,24 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/rangers/edit/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Ranger ranger = tryFindRanger(request.params(":id"));
+      if(ranger == null) {
+        response.redirect("/");
+      } else {
+        model.put("ranger", ranger);
+      }
+      model.put("template", "templates/rangers/edit.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/rangers/delete/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Ranger ranger = tryFindRanger(request.params(":id"));
+      if(ranger == null) {
+        response.redirect("/");
+      } else {
+        model.put("ranger", ranger);
+      }
+      model.put("template", "templates/rangers/delete.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -271,12 +283,33 @@ public class App {
     }, new VelocityTemplateEngine());
 
     post("/rangers/edit", (request, response) -> {
-      response.redirect("/");
+      int id = tryParseInt(request.queryParams("id"));
+      String username = request.queryParams("username");
+      String firstname = request.queryParams("firstname");
+      String lastname = request.queryParams("lastname");
+      int badge = Integer.parseInt(request.queryParams("badge"));
+      long phone = Long.parseLong(request.queryParams("phone"));
+      try {
+        Ranger ranger = Ranger.find(id);
+        ranger.setUserName(username);
+        ranger.setFirstName(firstname);
+        ranger.setLastName(lastname);
+        ranger.setPhone(phone);
+        ranger.setBadge(badge);
+        ranger.update();
+      } catch (IllegalArgumentException e) {
+        response.redirect("/rangers");
+      }
+      response.redirect("/rangers");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     post("/rangers/delete", (request, response) -> {
-      response.redirect("/");
+      Ranger ranger = tryFindRanger(request.queryParams("rangerId"));
+      if(ranger != null) {
+        ranger.delete();
+      }
+      response.redirect("/rangers");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -353,6 +386,15 @@ public class App {
     Integer locationId = tryParseInt(id);
     if(locationId != null && Location.find(locationId) != null) {
       return Location.find(locationId);
+    } else {
+      return null;
+    }
+  }
+
+  private static Ranger tryFindRanger(String id) {
+    Integer rangerId = tryParseInt(id);
+    if(rangerId != null && Ranger.find(rangerId) != null) {
+      return Ranger.find(rangerId);
     } else {
       return null;
     }
