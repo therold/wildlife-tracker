@@ -262,7 +262,13 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/rangers/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Ranger ranger = tryFindRanger(request.params(":id"));
+      if(ranger == null) {
+        response.redirect("/");
+      } else {
+        model.put("ranger", ranger);
+      }
+      model.put("template", "templates/rangers/view.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
