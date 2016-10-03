@@ -70,7 +70,13 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/animals/search", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      if(request.queryParams("s") != null) {
+        String search = request.queryParams("s");
+        model.put("endangeredanimals", EndangeredAnimal.search(search));
+        model.put("regularanimals", RegularAnimal.search(search));
+        model.put("search", search);
+      }
+      model.put("template", "templates/animals/search.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
