@@ -8,6 +8,7 @@ public class RegularAnimal extends Animal implements DatabaseManagement {
     if(DatabaseManagement.nameValidation(name)) {
       this.name = name;
     }
+    this.type = DATABASE_TYPE;
   }
 
   public void save() {

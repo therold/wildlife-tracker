@@ -36,7 +36,13 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/animals/edit/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Animal animal = tryFindAnimal(request.params(":id"));
+      if(animal == null) {
+        response.redirect("/");
+      } else {
+        model.put("animal", animal);
+      }
+      model.put("template", "templates/animals/edit.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -226,4 +232,30 @@ public class App {
     }, new VelocityTemplateEngine());
 
   }
+
+  private static Animal tryFindAnimal(String id) {
+    Integer animalId = tryParseInt(id);
+    if(animalId != null && Animal.idExists(animalId)) {
+      if(Animal.getAnimalType(animalId).equals(EndangeredAnimal.DATABASE_TYPE)) {
+        return EndangeredAnimal.find(animalId);
+      } else if (Animal.getAnimalType(animalId).equals(RegularAnimal.DATABASE_TYPE)) {
+        return RegularAnimal.find(animalId);
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  private static Integer tryParseInt(String toParse) {
+    Integer number = null;
+    try {
+      number = Integer.parseInt(toParse);
+    } catch (NumberFormatException e) {
+      System.out.println("Error parsing integer: " + e.getMessage());
+    }
+    return number;
+  }
+
 }

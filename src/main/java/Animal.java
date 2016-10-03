@@ -4,6 +4,7 @@ import org.sql2o.*;
 public abstract class Animal implements DatabaseManagement {
   protected int id;
   protected String name;
+  protected String type;
   private static final int MIN_NAME_LENGTH = 1;
 
   public int getId() {
@@ -18,6 +19,10 @@ public abstract class Animal implements DatabaseManagement {
     if(DatabaseManagement.nameValidation(name)) {
       this.name = name;
     }
+  }
+
+  public String getType() {
+    return this.type;
   }
 
   public List<Sighting> getSightings() {
@@ -56,6 +61,18 @@ public abstract class Animal implements DatabaseManagement {
         .executeScalar(Integer.class);
     }
     return count != 0;
+  }
+
+  public static String getAnimalType(int id) {
+    String type;
+    try(Connection con = DB.sql2o.open()) {
+      String sql = "SELECT type FROM animals WHERE id = :id;";
+      type = con.createQuery(sql)
+        .throwOnMappingFailure(false)
+        .addParameter("id", id)
+        .executeScalar(String.class);
+    }
+    return type;
   }
 
   public void delete() {

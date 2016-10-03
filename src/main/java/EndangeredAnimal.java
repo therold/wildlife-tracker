@@ -14,6 +14,7 @@ public class EndangeredAnimal extends Animal implements DatabaseManagement {
       this.age = age;
     }
     this.health = health;
+    this.type = DATABASE_TYPE;
   }
 
   public double getAge() {
