@@ -346,12 +346,30 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/sightings/edit/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Sighting sighting = tryFindSighting(request.params(":id"));
+      if(sighting == null) {
+        response.redirect("/");
+      } else {
+        model.put("sighting", sighting);
+      }
+      model.put("rangers", Ranger.all());
+      model.put("locations", Location.all());
+      List<Animal> allAnimals = new ArrayList<Animal>();
+      allAnimals.addAll(EndangeredAnimal.all());
+      allAnimals.addAll(RegularAnimal.all());
+      model.put("animals", allAnimals);
+      model.put("template", "templates/sightings/edit.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
     get("/sightings/delete/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Sighting sighting = tryFindSighting(request.params(":id"));
+      if(sighting == null) {
+        response.redirect("/");
+      } else {
+        model.put("sighting", sighting);
+      }
+      model.put("template", "templates/sightings/delete.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -372,7 +390,6 @@ public class App {
       String timeOfSighting = request.queryParams("timeOfSighting");
       Calendar cal = Calendar.getInstance();
       SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-      System.out.println(timeOfSighting);
       cal.setTime(dateFormat.parse(timeOfSighting));
       try {
         Sighting sighting = new Sighting(animalId, locationId, rangerId, new Timestamp(cal.getTimeInMillis()));
@@ -385,12 +402,36 @@ public class App {
     }, new VelocityTemplateEngine());
 
     post("/sightings/edit", (request, response) -> {
-      response.redirect("/");
+      int id = tryParseInt(request.queryParams("id"));
+      int rangerId = Integer.parseInt(request.queryParams("rangerId"));
+      int locationId = Integer.parseInt(request.queryParams("locationId"));
+      int animalId = Integer.parseInt(request.queryParams("animalId"));
+      String timeOfSighting = request.queryParams("timeOfSighting");
+      Calendar cal = Calendar.getInstance();
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+      System.out.println(timeOfSighting);
+      cal.setTime(dateFormat.parse(timeOfSighting));
+      try {
+        Sighting sighting = Sighting.find(id);
+        sighting.setAnimalId(animalId);
+        sighting.setLocationId(locationId);
+        sighting.setRangerId(rangerId);
+        sighting.setTimeOfSighting(new Timestamp(cal.getTimeInMillis()));
+        sighting.update();
+      } catch (IllegalArgumentException e) {
+        response.redirect("/sightings");
+      }
+      response.redirect("/sightings");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
+
     post("/sightings/delete", (request, response) -> {
-      response.redirect("/");
+      Sighting sighting = tryFindSighting(request.queryParams("sightingId"));
+      if(sighting != null) {
+        sighting.delete();
+      }
+      response.redirect("/sightings");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
@@ -430,6 +471,15 @@ public class App {
     Integer rangerId = tryParseInt(id);
     if(rangerId != null && Ranger.find(rangerId) != null) {
       return Ranger.find(rangerId);
+    } else {
+      return null;
+    }
+  }
+
+  private static Sighting tryFindSighting(String id) {
+    Integer sightingId = tryParseInt(id);
+    if(sightingId != null && Sighting.find(sightingId) != null) {
+      return Sighting.find(sightingId);
     } else {
       return null;
     }
