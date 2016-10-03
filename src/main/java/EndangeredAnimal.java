@@ -4,7 +4,7 @@ import java.util.List;
 public class EndangeredAnimal extends Animal implements DatabaseManagement {
   private double age;
   private String health;
-  private static final String DATABASE_TYPE = "endangered_animal";
+  public static final String DATABASE_TYPE = "endangered_animal";
 
   public EndangeredAnimal(String name, double age, String health) {
     if(DatabaseManagement.nameValidation(name)) {

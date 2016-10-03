@@ -54,6 +54,17 @@ public class App {
     }, new VelocityTemplateEngine());
 
     post("/animals", (request, response) -> {
+      String type = request.queryParams("type");
+      String name = request.queryParams("name");
+      if(type.equals(EndangeredAnimal.DATABASE_TYPE)) {
+        String health = request.queryParams("health");
+        double age = Double.parseDouble(request.queryParams("age"));
+        EndangeredAnimal animal = new EndangeredAnimal(name, age, health);
+        animal.save();
+      } else {
+        RegularAnimal animal = new RegularAnimal(name);
+        animal.save();
+      }
       response.redirect("/");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
