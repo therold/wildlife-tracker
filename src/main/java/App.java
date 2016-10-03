@@ -379,7 +379,20 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/sightings/:id", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      Sighting sighting = tryFindSighting(request.params(":id"));
+      if(sighting == null) {
+        response.redirect("/");
+      } else {
+        model.put("sighting", sighting);
+      }
+      model.put("ranger", Ranger.find(sighting.getRangerId()));
+      model.put("location", Location.find(sighting.getRangerId()));
+      if(Animal.getAnimalType(sighting.getAnimalId()).equals(EndangeredAnimal.DATABASE_TYPE)) {
+        model.put("animal", EndangeredAnimal.find(sighting.getAnimalId()));
+      } else {
+        RegularAnimal.find(sighting.getAnimalId());
+      }
+      model.put("template", "templates/sightings/view.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
