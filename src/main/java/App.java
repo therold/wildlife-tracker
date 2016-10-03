@@ -29,7 +29,7 @@ public class App {
     }, new VelocityTemplateEngine());
 
     get("/animals/new", (request, response) -> {
-      model.put("template", "templates/index.vtl");
+      model.put("template", "templates/animals/new.vtl");
       return new ModelAndView(model, layout);
     }, new VelocityTemplateEngine());
 
